@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>โน้ตไปสอบ TOEIC เชียงใหม่</title>
+<title>โน้ตไปสอบ TOEIC</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sriracha&family=Mali:wght@400;600;700&display=swap">
@@ -35,9 +35,7 @@ body{
 header{display:grid;gap:6px;margin-bottom:26px}
 .eyebrow{font-family:var(--hand);color:var(--ink-soft);font-size:1rem;letter-spacing:.02em}
 h1{font-family:var(--hand);font-weight:400;font-size:clamp(2rem,6vw,3.2rem);line-height:1.15;margin:0;text-wrap:balance}
-h1 .scrib{position:relative;white-space:nowrap}
-h1 .scrib::after{content:"";position:absolute;left:-2%;right:-2%;bottom:.02em;height:.32em;background:var(--hl);z-index:-1;transform:rotate(-1.2deg);border-radius:40% 10% 50% 20%}
-h1 .scrib{z-index:0;isolation:isolate}
+h1 .scrib{white-space:nowrap;background:linear-gradient(transparent 62%,var(--hl) 62%,var(--hl) 92%,transparent 92%);padding:0 .08em}
 .sub{color:var(--ink-soft);margin:0}
 
 .hl{background:linear-gradient(transparent 52%,var(--hl) 52%,var(--hl) 92%,transparent 92%);padding:0 2px;font-weight:700}
@@ -109,6 +107,23 @@ a{color:var(--ink)}
 .homebtn{justify-self:start;background:var(--ink);color:var(--paper);text-decoration:none;font-weight:700;padding:8px 16px;border-radius:999px}
 .btnrow{display:flex;flex-wrap:wrap;gap:8px}
 .srcbtn{border:1.5px solid var(--ink-soft);color:var(--ink);text-decoration:none;border-radius:999px;padding:6px 12px;font-size:.85rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chipx{background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:4px 12px;font-size:.9rem;box-shadow:1px 2px 0 var(--line)}
+.rounds{display:grid;gap:10px}
+.round{position:relative;display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;border:1.5px dashed var(--line);border-radius:12px;padding:8px 12px}
+.round .date{display:flex;flex-direction:column;align-items:center;line-height:1.1;border-right:1.5px dashed var(--line);padding-right:10px}
+.round .date b{font-family:var(--hand);font-weight:400;font-size:1.7rem}
+.round .date span{font-size:.75rem;color:var(--ink-soft);white-space:nowrap}
+.round .info{display:flex;flex-direction:column;line-height:1.35;min-width:0}
+.round .info span{font-size:.88rem;color:var(--ink-soft)}
+.round .price{font-weight:700;font-variant-numeric:tabular-nums}
+.round.pick{border:2.5px solid var(--red);background:linear-gradient(transparent,transparent),var(--card)}
+.stamp{position:absolute;top:-10px;right:10px;font-family:var(--hand);color:var(--red);border:2px solid var(--red);border-radius:6px;padding:0 8px;background:var(--card);transform:rotate(6deg);font-size:.9rem}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.vs .side{border:1.5px dashed var(--line);border-radius:12px;padding:10px 12px}
+.vs .side.good{border:2px solid var(--ink)}
+.vs h3{font-family:var(--hand);font-weight:400;font-size:1.2rem;margin:0 0 6px}
+.bigbtn{display:block;text-align:center;background:var(--ink);color:var(--paper);text-decoration:none;font-weight:700;padding:12px 16px;border-radius:14px;margin-bottom:10px}
 @media (max-width:560px){ .card{transform:none!important} .alert{transform:none} }
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
@@ -120,8 +135,14 @@ a{color:var(--ink)}
   <header>
     <a class="homebtn" href="https://claude.ai/artifact/1jb5VHszRj9v4h7qVePJMn" target="_blank" rel="noopener">🏠 หน้าหลัก</a>
     <div class="eyebrow">อัปเดต 25 ต.ค. 2569</div>
-    <h1>โน้ตไปสอบ <span class="scrib">TOEIC</span> ที่เชียงใหม่</h1>
-    <p class="sub">รอบสอบ ค่าสอบ วิธีจอง ของที่ต้องเตรียม<br>ข้อมูลเปลี่ยนได้ เช็กกับ CPA ก่อนจอง</p>
+    <h1>โน้ตไปสอบ <span class="scrib">TOEIC</span></h1>
+    <p class="sub">รอบสอบ ค่าสอบ วิธีจอง ของที่ต้องเตรียม</p>
+    <div class="chips">
+      <span class="chipx">📅 แนะนำ ส. 28 พ.ย.</span>
+      <span class="chipx">💻 สอบคอม</span>
+      <span class="chipx">💰 1,850 บาท</span>
+      <span class="chipx">📍 เชียงใหม่</span>
+    </div>
   </header>
 
   <section class="alert">
@@ -137,35 +158,40 @@ a{color:var(--ink)}
     <div class="col">
 
       <article class="card">
-        <h2>รอบเชียงใหม่ พ.ย. 69 <small>จาก LINE shop ของ CPA</small></h2>
-        <div class="tablebox"><table>
-          <tr><th>วัน</th><th>แบบ</th><th>ที่</th><th>บาท</th></tr>
-          <tr><td>ส. 7 พ.ย.</td><td>Open Testing</td><td>อาคารศิริพาณิชย์</td><td class="num">1,850</td></tr>
-          <tr><td>ส. 21 พ.ย.</td><td>Open Testing</td><td>อาคารศิริพาณิชย์</td><td class="num">1,850</td></tr>
-          <tr><td>ส. 21 พ.ย. 14:00</td><td>Public Test</td><td>อาคารศิริพาณิชย์</td><td class="num">2,100</td></tr>
-          <tr><td><b>ส. 28 พ.ย.</b></td><td><b>คอมพิวเตอร์</b><br><span class="small">คนไทย</span></td><td>มหาวิทยาลัยฟาร์อีสเทอร์น</td><td class="num">1,850</td></tr>
-        </table></div>
-        <div class="sticky" style="margin-top:12px">
-          แผนเรียนจบ 23 พ.ย.<br>
-          <b>28 พ.ย.</b> พอดีที่สุด ได้ทบทวนครบ และพ้นลอยกระทง<br>
-          21 พ.ย. ก็ได้ แต่สัปดาห์สุดท้ายจะหายไป
+        <h2>รอบเชียงใหม่ พ.ย. 69</h2>
+        <div class="rounds">
+          <div class="round"><div class="date"><b>7</b><span>ส. พ.ย.</span></div><div class="info"><b>Open Testing</b><span>อาคารศิริพาณิชย์</span></div><div class="price">1,850</div></div>
+          <div class="round"><div class="date"><b>21</b><span>ส. พ.ย.</span></div><div class="info"><b>Open Testing</b><span>อาคารศิริพาณิชย์</span></div><div class="price">1,850</div></div>
+          <div class="round"><div class="date"><b>21</b><span>14:00</span></div><div class="info"><b>Public Test</b><span>อาคารศิริพาณิชย์</span></div><div class="price">2,100</div></div>
+          <div class="round pick"><div class="date"><b>28</b><span>ส. พ.ย.</span></div><div class="info"><b>💻 สอบคอม</b><span>ม.ฟาร์อีสเทอร์น</span></div><div class="price">1,850</div><span class="stamp">แนะนำ</span></div>
         </div>
-        <p class="small" style="margin-top:8px">เวลาของรอบที่ไม่ได้เขียนไว้ ถามตอนจอง</p>
+        <p class="small" style="margin-top:10px">28 พ.ย. พ้นแผนเรียน 23 พ.ย. และพ้นลอยกระทง<br>เวลาของรอบที่ไม่ได้เขียน ถามตอนจอง</p>
       </article>
 
       <article class="card">
-        <h2>กระดาษ หรือ คอมพิวเตอร์</h2>
-        <div class="tablebox"><table>
-          <tr><th></th><th>📄 กระดาษ</th><th>💻 คอม</th></tr>
-          <tr><td>เสียง</td><td>ลำโพงในห้อง ปรับไม่ได้</td><td><b>หูฟัง ปรับเสียงได้</b></td></tr>
-          <tr><td>Part 1–2</td><td>เห็นข้อสอบทั้งเล่ม</td><td>ทีละข้อ ย้อนไม่ได้</td></tr>
-          <tr><td>Part 3–4</td><td>อ่านคำถามล่วงหน้าได้</td><td>ทีละชุด 3 ข้อ ข้ามไปชุดหน้าไม่ได้</td></tr>
-          <tr><td>Reading</td><td>ข้ามไปมาได้</td><td>ข้ามไปมาได้ ขยายตัวหนังสือได้</td></tr>
-          <tr><td>ตอบ</td><td>ระบายดินสอ</td><td>คลิก</td></tr>
-          <tr><td>ผลสอบ</td><td>วันที่ 4 หลังสอบ</td><td><b>เห็นคะแนนทันที</b></td></tr>
-        </table></div>
-        <p style="margin-top:8px">เราเคยบอกว่าเสียงสอบ EE อื้อ ๆ มัว ๆ<br>→ <b>หูฟังของรอบคอมน่าจะช่วยมาก</b></p>
-        <p class="small">ทั้ง 2 แบบ ห้ามขีดเขียนในข้อสอบ</p>
+        <h2>กระดาษ หรือ คอม</h2>
+        <div class="vs">
+          <div class="side">
+            <h3>📄 กระดาษ</h3>
+            <ul class="dash">
+              <li>ลำโพงในห้อง</li>
+              <li>อ่านคำถามล่วงหน้าได้</li>
+              <li>ระบายดินสอ</li>
+              <li>ผลวันที่ 4</li>
+            </ul>
+          </div>
+          <div class="side good">
+            <h3>💻 คอม</h3>
+            <ul class="dash">
+              <li><b>หูฟัง ปรับเสียงได้</b></li>
+              <li>ฟังทีละข้อ ย้อนไม่ได้</li>
+              <li>คลิกตอบ</li>
+              <li><b>เห็นคะแนนทันที</b></li>
+            </ul>
+          </div>
+        </div>
+        <p style="margin-top:10px">เสียงสอบ EE อื้อ ๆ มัว ๆ<br>→ <b>หูฟังของรอบคอมช่วยได้มาก</b></p>
+        <p class="small">ทั้ง 2 แบบ ห้ามขีดเขียนในข้อสอบ Reading ข้ามไปมาได้</p>
       </article>
 
       <article class="card">
@@ -199,9 +225,7 @@ a{color:var(--ink)}
 
       <article class="card">
         <h2>จอง</h2>
-        <div class="btnrow" style="margin-bottom:8px">
-          <a class="srcbtn" href="https://shop.line.me/@cpa_thailand/collection/245805" target="_blank" rel="noopener">รอบเชียงใหม่ (LINE shop)</a>
-        </div>
+        <a class="bigbtn" href="https://shop.line.me/@cpa_thailand/collection/245805" target="_blank" rel="noopener">จองรอบเชียงใหม่ใน LINE shop</a>
         <div class="phone"><span>Call Center</span><code id="p-bkk">02-260-7061</code><button class="copy" type="button" data-copy="022607061">คัดลอก</button></div>
         <p class="small">จ.–ส. 08:00–16:30 จองทางอีเมลไม่ได้<br>LINE @cpa_thailand</p>
         <ol class="steps">
@@ -209,7 +233,7 @@ a{color:var(--ink)}
           <li>ชื่ออังกฤษ<b>ตรงกับบัตร</b></li>
           <li>จองเร็ว ๆ ที่นั่งมีจำกัด</li>
           <li>จดวัน เวลา ที่อยู่สนามสอบ</li>
-          <li>เลื่อนหรือยกเลิก แจ้งก่อน<b>1 วันทำการ</b></li>
+          <li>เลื่อนหรือยกเลิก แจ้งก่อน <b>1 วันทำการ</b></li>
         </ol>
       </article>
 
