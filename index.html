@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>TOEIC: Main</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sriracha&family=Mali:wght@400;600;700&display=swap">
+<style>
+/* Layout: a planner page on dotted paper — month grid on the left, a sticky note for the chosen day on the right (stacks under on phones). Week colours are highlighter strokes. */
+:root{
+  --paper:#f6f8fb; --dot:#c9d3e0; --ink:#26324a; --muted:#66728a; --pen:#2b56c7;
+  --card:#ffffff; --line:#d7dfea;
+  --w1:#bff0d4; --w2:#c4e3ff; --w3:#e2d4ff; --w4:#ffd9bf; --w5:#e6e9ee;
+  --note:#fff4a8; --note-ink:#3d3510; --done:#1f8a52; --stamp:#d2443b;
+  --font-hand:"Sriracha","Mali",cursive;
+  --font-body:"Mali","Sriracha",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#161b26; --dot:#2c3547; --ink:#e4e9f2; --muted:#9aa6bd; --pen:#8fb0ff;
+  --card:#1d2433; --line:#323c50;
+  --w1:#1f4a36; --w2:#1d3b5c; --w3:#3a2f5c; --w4:#5a3a26; --w5:#2a3140;
+  --note:#4a4318; --note-ink:#fff3b0; --done:#5fd394; --stamp:#ff7d73; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#161b26; --dot:#2c3547; --ink:#e4e9f2; --muted:#9aa6bd; --pen:#8fb0ff;
+  --card:#1d2433; --line:#323c50;
+  --w1:#1f4a36; --w2:#1d3b5c; --w3:#3a2f5c; --w4:#5a3a26; --w5:#2a3140;
+  --note:#4a4318; --note-ink:#fff3b0; --done:#5fd394; --stamp:#ff7d73; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background-color:var(--paper);background-image:radial-gradient(var(--dot) 1.2px,transparent 1.3px);background-size:22px 22px;
+  color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 60px}
+h1,h2,h3{font-family:var(--font-hand);font-weight:400;margin:0;line-height:1.2;text-wrap:balance}
+p{margin:0}
+button,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px dashed var(--pen);outline-offset:3px}
+.hand{border:2px solid var(--ink);border-radius:255px 15px 225px 15px/15px 225px 15px 255px}
+
+.page{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+header{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:flex-end;justify-content:space-between}
+.titlebox{display:flex;flex-direction:column;gap:2px}
+h1{font-size:clamp(2.2rem,6vw,3.4rem);color:var(--pen)}
+h1 mark{background:linear-gradient(transparent 55%,var(--w4) 55%,var(--w4) 90%,transparent 90%);color:inherit;padding:0 4px}
+.sub{color:var(--muted)}
+.stats{display:flex;gap:12px;flex-wrap:wrap}
+.stat{background:var(--card);padding:8px 16px;display:flex;flex-direction:column;align-items:center;min-width:92px}
+.stat b{font-family:var(--font-hand);font-weight:400;font-size:1.7rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat span{font-size:.85rem;color:var(--muted)}
+.bar{height:14px;background:var(--card);overflow:hidden;position:relative}
+.bar i{position:absolute;inset:0 auto 0 0;width:0;background:repeating-linear-gradient(-45deg,var(--w1) 0 8px,var(--done) 8px 10px);transition:width .5s}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:26px;align-items:start}
+@media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}}
+
+.cal{background:var(--card);padding:16px 14px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.calhead{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px}
+.calhead h2{font-size:1.6rem}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.dow{text-align:center;font-family:var(--font-hand);color:var(--muted);font-size:1.05rem}
+.dow.sun{color:var(--stamp)}
+.day{position:relative;min-height:104px;background:var(--paper);border:1.5px solid var(--line);border-radius:10px 14px 9px 12px;
+  padding:6px 7px 8px;text-align:left;display:flex;flex-direction:column;gap:3px;transition:transform .15s}
+.day:hover{transform:rotate(-1deg) translateY(-2px)}
+.day .num{font-family:var(--font-hand);font-size:1.45rem;line-height:1}
+.day .num small{font-size:.75rem;color:var(--muted);font-family:var(--font-body)}
+.day .ico{position:absolute;top:6px;right:7px;font-size:1.05rem}
+.day .topic{font-size:.78rem;line-height:1.3;color:var(--ink);overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.day .dots{margin-top:auto;display:flex;gap:3px}
+.day .dots i{width:9px;height:9px;border:1.5px solid var(--muted);border-radius:50%}
+.day .dots i.on{background:var(--done);border-color:var(--done)}
+.day.w1{background:var(--w1)} .day.w2{background:var(--w2)} .day.w3{background:var(--w3)} .day.w4{background:var(--w4)} .day.w5{background:var(--w5)}
+.day.today{border:2.5px solid var(--pen);border-radius:255px 15px 225px 15px/15px 225px 15px 255px}
+.day.today::before{content:"วันนี้";position:absolute;top:-11px;left:8px;background:var(--pen);color:var(--card);font-size:.7rem;padding:0 6px;border-radius:6px}
+.day.sel{box-shadow:0 0 0 3px var(--ink);transform:rotate(-1.2deg)}
+.day.past:not(.done){opacity:.75}
+.day.done::after{content:"✓ เสร็จ";position:absolute;right:4px;bottom:6px;font-family:var(--font-hand);color:var(--stamp);
+  border:2px solid var(--stamp);border-radius:6px;padding:0 4px;font-size:.8rem;transform:rotate(-12deg);background:var(--card)}
+.day.blank{background:transparent;border-style:dashed;opacity:.55;cursor:default}
+.day.blank:hover{transform:none}
+@media (max-width:560px){
+  .day{min-height:62px;padding:4px 4px 6px}
+  .day .topic{display:none}
+  .day .num{font-size:1.15rem}
+  .day .ico{top:3px;right:3px;font-size:.85rem}
+  .day .dots i{width:6px;height:6px;border-width:1px}
+  .day.done::after{content:"✓";font-size:.9rem;padding:0 3px}
+  .day.today::before{font-size:.6rem;top:-9px;left:3px}
+}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:.9rem}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:26px;height:12px;border-radius:3px;display:inline-block}
+
+/* sticky note */
+.note{background:var(--note);color:var(--note-ink);padding:22px 20px 20px;transform:rotate(.8deg);box-shadow:0 10px 22px -12px rgba(0,0,0,.45);
+  display:flex;flex-direction:column;gap:12px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);min-width:0}
+.note::before{content:"";position:absolute;top:-12px;left:50%;width:110px;height:24px;margin-left:-55px;background:var(--w2);opacity:.85;transform:rotate(-3deg)}
+@media (max-width:900px){.note{position:static;transform:none}}
+.note .when{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.note h3{font-size:1.7rem}
+.navbtn{background:transparent;border:2px solid currentColor;border-radius:50%;width:38px;height:38px;font-family:var(--font-hand);font-size:1.2rem;line-height:1}
+.navbtn:disabled{opacity:.3;cursor:default}
+.wk{display:inline-block;font-size:.85rem;padding:0 8px;border-radius:4px;color:var(--ink)}
+.topicbig{font-family:var(--font-hand);font-size:1.25rem;line-height:1.35}
+.tasks{display:flex;flex-direction:column;gap:10px}
+.trow{display:flex;gap:8px;align-items:flex-start;justify-content:space-between;border-bottom:1.5px dashed rgba(0,0,0,.18);padding-bottom:8px}
+.trow .no{font-family:var(--font-hand);font-size:1.2rem;line-height:1.4;min-width:1.2em}
+.task{display:flex;gap:10px;align-items:flex-start;background:none;border:none;text-align:left;padding:2px 0;flex:1;min-width:0}
+.open{flex:none;align-self:center;background:var(--pen);color:var(--card);text-decoration:none;font-weight:700;font-size:.9rem;padding:4px 12px;border-radius:999px;white-space:nowrap}
+.nolink{flex:none;align-self:center;font-size:.8rem;opacity:.7;max-width:7em;text-align:right;line-height:1.3}
+.ty{align-self:flex-start;display:inline-block;font-size:.72rem;font-weight:700;padding:0 6px;border-radius:4px;color:#26324a;white-space:nowrap}
+.ty.learn{background:#c4e3ff} .ty.daily{background:#bff0d4} .ty.test{background:#ffd9bf} .ty.vocab{background:#e2d4ff} .ty.review{background:#e6e9ee} .ty.rest{background:#e6e9ee}
+.dir{background:var(--card);padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.dir h2{font-size:1.5rem}
+.dirgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.dirbox{border:1.5px dashed var(--line);border-radius:10px;padding:10px 14px;display:flex;flex-direction:column;gap:6px}
+.dirbox h3{font-size:1.2rem;color:var(--pen)}
+.dirbox a{color:inherit;font-weight:600;text-underline-offset:3px}
+.dirbox ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px}
+.dirbox .sub{font-size:.9rem}
+.btns{display:flex;flex-direction:column;gap:8px}
+.btnlink{display:block;text-align:center;background:var(--pen);color:var(--card);text-decoration:none;font-weight:700;padding:10px 14px;border-radius:12px;min-height:44px}
+.btnlink.ghost{background:transparent;color:var(--pen);border:2px solid var(--pen)}
+.open{min-height:36px;display:inline-flex;align-items:center}
+/* phone + iPad: today first, then the month */
+@media (max-width:900px){ .note{order:-1} .layout{gap:18px} }
+@media (max-width:560px){
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:100%}
+  .stat{min-width:0;padding:6px 4px}
+  .stat b{font-size:1.25rem}
+  .stat span{font-size:.7rem;text-align:center;line-height:1.2}
+  .day .ico{display:none}
+  .note{padding:20px 14px 16px}
+  .trow{flex-wrap:wrap}
+  .open{margin-left:34px}
+}
+.box{flex:none;width:24px;height:24px;border:2px solid currentColor;border-radius:4px 7px 5px 6px;display:grid;place-items:center;font-family:var(--font-hand);font-size:1.3rem;line-height:1;color:var(--done)}
+.task .box{color:var(--note-ink)}
+.task.on .box::after{content:"✓";color:var(--done);transform:translate(2px,-3px) rotate(6deg)}
+.task.on .t{text-decoration:line-through;text-decoration-thickness:2px;opacity:.7}
+.task .t{display:flex;flex-direction:column;gap:2px;min-width:0}
+.task .t small{display:block;opacity:.75}
+.task.bonus .t::before{content:"⭐ ถ้ามีเวลา: ";font-weight:600}
+.hours{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chip{background:transparent;border:2px solid currentColor;border-radius:999px;padding:2px 12px;font-weight:600}
+.chip[aria-pressed="true"]{background:var(--note-ink);color:var(--note)}
+textarea{width:100%;min-height:70px;background:transparent;border:none;border-bottom:2px dashed currentColor;resize:vertical;
+  background-image:repeating-linear-gradient(transparent 0 27px,rgba(0,0,0,.12) 27px 28px);line-height:28px;padding:0 2px}
+.mm{display:flex;flex-direction:column;gap:4px;border:2px dashed currentColor;border-radius:8px;padding:8px 12px}
+.mm a{color:inherit;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.lesson{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;background:var(--pen);color:var(--card);text-decoration:none;
+  font-family:var(--font-hand);font-size:1.1rem;padding:6px 16px;border-radius:255px 15px 225px 15px/15px 225px 15px 255px}
+.save{font-size:.85rem;opacity:.8;min-height:1.2em}
+.cheer{font-family:var(--font-hand);font-size:1.3rem;color:var(--done)}
+
+.daily{background:var(--card);padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.daily h2{font-size:1.5rem}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px}
+.dcell{border:1.5px dashed var(--line);border-radius:10px;padding:8px 12px}
+.dcell b{font-family:var(--font-hand);font-weight:400;font-size:1.25rem;color:var(--pen)}
+@media (prefers-reduced-motion:reduce){.day,.bar i{transition:none}.day:hover,.day.sel{transform:none}}
+</style>
+</head>
+<body>
+
+
+<div class="page">
+  <header>
+    <div class="titlebox">
+      <p class="sub">🏠 หน้าหลัก เปิดหน้านี้ทุกวัน</p>
+      <h1>แผน TOEIC <mark>850</mark> ✏️</h1>
+      <p class="sub">25 ต.ค. ถึง 23 พ.ย. วันละ 2–4 ชม.</p>
+    </div>
+    <div class="stats">
+      <div class="stat hand"><b id="stDone">0/28</b><span>วันที่ทำครบ</span></div>
+      <div class="stat hand"><b id="stStreak">0 🔥</b><span>ติดกันกี่วัน</span></div>
+      <div class="stat hand"><b id="stHours">0</b><span>ชั่วโมงรวม</span></div>
+      <div class="stat hand"><b id="stLeft">30</b><span>วันที่เหลือ</span></div>
+    </div>
+  </header>
+  <div class="bar hand" aria-hidden="true"><i id="barFill"></i></div>
+
+  <div class="layout">
+    <section class="cal hand" aria-label="ปฏิทิน">
+      <div class="calhead"><h2>ตุลาคม → พฤศจิกายน</h2><span class="sub">แตะวันเพื่อดูงาน</span></div>
+      <div class="grid" id="grid"></div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <aside class="note" id="note" aria-live="polite">
+      <div class="when">
+        <button class="navbtn" id="prevBtn" aria-label="วันก่อนหน้า">‹</button>
+        <h3 id="nDate">—</h3>
+        <button class="navbtn" id="nextBtn" aria-label="วันถัดไป">›</button>
+      </div>
+      <div><span class="wk" id="nWeek"></span></div>
+      <p class="topicbig" id="nTopic"></p>
+      <p id="nDetail"></p>
+      <p style="font-weight:700">ทำทีละข้อ กดเปิด ทำเสร็จกลับมาติ๊ก</p>
+      <div class="tasks" id="nTasks"></div>
+      <div class="hours"><span>วันนี้ทำไป</span>
+        <button class="chip" data-h="1">1</button><button class="chip" data-h="2">2</button><button class="chip" data-h="3">3</button><button class="chip" data-h="4">4+</button><span>ชม.</span></div>
+      <label for="nNote">จดสั้น ๆ: ยากตรงไหน</label>
+      <textarea id="nNote" placeholder="เช่น Part 2 ข้อ 7 ฟังไม่ทัน ..."></textarea>
+      <p class="cheer" id="nCheer"></p>
+      <p class="save" id="nSave"></p>
+      <button class="chip" id="copyBtn" style="align-self:flex-start">📋 คัดลอกผลส่งติวเตอร์</button>
+    </aside>
+  </div>
+
+  <section class="dir hand" aria-label="หน้าทั้งหมด">
+    <h2>🗂️ หน้าทั้งหมด</h2>
+    <p class="sub">ปกติไม่ต้องใช้ กดเปิดจากในวันได้เลย</p>
+    <p class="sub" id="siteNote" hidden>บทเรียนและหน้าฝึกเปิดใน claude.ai ต้องล็อกอิน</p>
+    <div class="dirgrid">
+      <div class="dirbox">
+        <h3><span class="ty learn">📘 บทเรียน</span></h3>
+        <p class="sub">วันละบท สอนแล้วมี Mock</p>
+        <div class="btns" id="dirLessons"></div>
+      </div>
+      <div class="dirbox">
+        <h3><span class="ty daily">🎙️ ฝึกประจำวัน</span></h3>
+        <p class="sub">หน้าเดียว ใช้ทุกวัน เปลี่ยนแค่ชุด</p>
+        <div class="btns"><a class="btnlink" href="https://claude.ai/artifact/Jbhi6ZQVo1AWRxw9NZwu7R" target="_blank" rel="noopener">ฝึกประจำวัน</a></div>
+      </div>
+      <div class="dirbox">
+        <h3><span class="ty test">📝 สอบเต็ม</span></h3>
+        <p class="sub">เปิดเฉพาะวันที่ปฏิทินบอก</p>
+        <ul>
+          <li>Test 2 วันที่ 2</li>
+          <li>Test 3 วันที่ 22</li>
+          <li>Test 1 ไม่ต้องเปิด อยู่ในบทเรียนแล้ว</li>
+        </ul>
+      </div>
+      <div class="dirbox">
+        <h3><span class="ty review">🔁 ทวน grammar</span></h3>
+        <p class="sub">เปิดเมื่อลืมกฎ</p>
+        <div class="btns">
+          <a class="btnlink ghost" href="https://claude.ai/artifact/4bmar5KJWNwvJPYsrGfMTo" target="_blank" rel="noopener">ชนิดคำ และ tense</a>
+          <a class="btnlink ghost" href="https://claude.ai/artifact/CYTmq1ccDyrR7jevFtk2bV" target="_blank" rel="noopener">คำเชื่อม และ the most</a>
+          <a class="btnlink ghost" href="https://claude.ai/artifact/Rutf2ziMnx9t93nJkBbDR3" target="_blank" rel="noopener">V-ing และ to V</a>
+        </div>
+      </div>
+      <div class="dirbox">
+        <h3>🧳 วันสอบจริง</h3>
+        <p class="sub">จองที่ไหน ค่าสอบ เอาอะไรไป</p>
+        <div class="btns"><a class="btnlink ghost" id="examLink" href="https://claude.ai/artifact/QmfaPUZ3ZYL1tvCodfu2BF" target="_blank" rel="noopener">ข้อมูลวันสอบ</a></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ---------- plan data ---------- */
+const START = new Date(2026, 9, 25);
+const WEEKS = {
+  w1:{label:"สัปดาห์ 1: Part 1, 2, 5"},
+  w2:{label:"สัปดาห์ 2: Part 3, 4, 6"},
+  w3:{label:"สัปดาห์ 3: Part 7"},
+  w4:{label:"สัปดาห์ 4: สอบเต็ม"},
+  w5:{label:"พัก"}
+};
+/* Pages (artifacts). Every task row in a day links straight to the page it needs.
+   The same file also runs as a plain website (GitHub Pages): there it saves to this browser instead of the claude db. */
+const ONSITE = /github\.io$/.test(location.hostname);
+const LOCAL_KEY = "toeic-progress";
+/* ticks made on claude.ai before the website existed, so the site does not start empty */
+const SEED = {"2026-10-25":{tasks:{lesson:true,listen:true,read:true,vocab:true},hours:0,note:""}};
+const MM = "https://memmoread.com";
+const T1 = MM+"/toeic/online-test/simulator/toeic-actual-test-simulation-test-1";
+const T2 = MM+"/toeic/online-test/simulator/toeic-actual-test-simulation-test-2";
+const T3 = MM+"/toeic/online-test/simulator/toeic-actual-test-simulation-test-3";
+const PAGE = {
+  d1:"https://claude.ai/artifact/DMbn4wAevcTfxWqfgz9k1Q",
+  daily:"https://claude.ai/artifact/Jbhi6ZQVo1AWRxw9NZwu7R",
+  examday: ONSITE ? "exam-day.html" : "https://claude.ai/artifact/QmfaPUZ3ZYL1tvCodfu2BF"
+};
+const TYPE = {learn:"📘 บทเรียน", daily:"🎙️ ฝึก", test:"📝 ข้อสอบ", vocab:"🎮 ศัพท์", review:"🔁 ทบทวน", rest:"🌿 พัก"};
+/* task = [key, type, label, time, url|null, bonus?] — keys stay the same as before so saved ticks keep working */
+const VOCAB = "VOCAB";   // replaced by the day's Memmoread vocab set
+const tLesson = url=>["lesson","learn","บทเรียนและ Mock","40 นาที",url];
+const tListen = set=>["listen","daily",`ฟังเขียนตาม และพูดตาม${set?` (ชุด ${set})`:""}`,"30 นาที",set?PAGE.daily+"#set="+set:null];
+const tRead = set=>["read","daily",`อ่าน Part 7 จับเวลา${set?` (ชุด ${set})`:""}`,"30 นาที",set?PAGE.daily+"#set="+set:null];
+const tVocab = ["vocab","vocab","เกมศัพท์","20 นาที",VOCAB];
+/* bonus: Memmoread has only 3 online tests (all already assigned), so the extra is a redo of the day's Mock under real-test rules */
+const tHalf = url=>["half","learn","ทำ Mock ซ้ำแบบสอบจริง","ฟัง 1 รอบ ส่งทีเดียว",url,true];
+const STD = (lesson, set)=>[tLesson(lesson), tListen(set), tRead(set), tVocab, tHalf(lesson)];
+const MINI = (label, url)=>[["test","test",label,"60 นาที",url||null], ["review","review","ทวนข้อผิด จดกฎที่ลืม","40 นาที",null], tVocab];
+const FULL = (label, url)=>[["test","test",label,"2 ชั่วโมง",url], ["score","test","จดคะแนนลงช่องบันทึก","5 นาที",null], tVocab];
+const REVIEW = [["review","review","ดูข้อผิดทีละข้อ","60 นาที",null], ["listen","review","ฟังข้อผิดซ้ำ","30 นาที",null], tVocab, ["half","review","ฝึก Part ที่อ่อนสุด","",null,true]];
+const REST = extra=>[["chill","rest","ฟังเพลงหรือพอดแคสต์","30 นาที",null], ["sleep","rest",extra||"นอนเร็ว","",extra?PAGE.examday:null]];
+
+/* [week, icon, topic, detail, tasks, lessonUrl] — one per day from 25 Oct.
+   Test 1 = lesson bank (lessons + daily practice) · Test 2 = placement test · Test 3 = final check */
+const PLAN = [
+ ["w1","🎧","Part 2 คำตอบอ้อม และ Part 5","บทแรก ใช้ข้อจริง Test 1",STD(PAGE.d1,1),PAGE.d1],
+ ["w1","🏁","สอบวัดระดับ Test 2","ยังไม่ต้องสนคะแนน ไว้เทียบตอนท้ายเดือน",FULL("สอบเต็ม Test 2",T2)],
+ ["w1","📷","Part 1 ดูรูป","คนกำลังทำ หรือของถูกวางไว้",STD(null,2)],
+ ["w1","⏰","Part 5 กริยา","tense และ passive",STD(null,3)],
+ ["w1","🎧","Part 2 ประโยคบอกเล่า","รวมคำถามหาง",STD(null,4)],
+ ["w1","🔗","Part 5 คำเชื่อม","รวมคำที่มาคู่กัน",STD(null,5)],
+ ["w1","📚","Part 5 ศัพท์ และ Mini test","ทดสอบสัปดาห์ 1",MINI("Mini test สัปดาห์ 1")],
+ ["w2","💬","Part 3 อ่านคำถามก่อนฟัง","อ่าน 3 คำถามก่อนเสียงเริ่ม",STD(null,0)],
+ ["w2","🤔","Part 3 ความหมายแฝง","ทำไมเขาพูดแบบนี้",STD(null,0)],
+ ["w2","📊","Part 3 ข้อมีกราฟิก","ดูตารางคู่กับเสียง",STD(null,0)],
+ ["w2","📢","Part 4 ประกาศ","ประโยคแรกบอกว่าเรื่องอะไร",STD(null,0)],
+ ["w2","✉️","Part 6 เติมคำ","ดูประโยคก่อนและหลังช่อง",STD(null,0)],
+ ["w2","🧩","Part 6 เติมประโยค","เลือกประโยคที่ต่อเรื่องได้",STD(null,0)],
+ ["w2","📝","Mini test ฟังยาว","ฟังรวด 45 นาที",MINI("ฟัง Test 1 รวด 45 นาที",T1)],
+ ["w3","🔍","Part 7 คำถามก่อน","ฝึกกับบทความชุดใหม่",STD(null,0)],
+ ["w3","🎯","Part 7 จุดประสงค์","ดูย่อหน้าแรก",STD(null,0)],
+ ["w3","❌","Part 7 ข้อ NOT","หาตัวที่ไม่มีในบทความ",STD(null,0)],
+ ["w3","🔤","Part 7 ความหมายคำ","เดาจากบริบท",STD(null,0)],
+ ["w3","📑","Part 7 สองบทความ","เอาข้อมูล 2 เรื่องมาต่อกัน",STD(null,0)],
+ ["w3","📑","Part 7 สามบทความ","คุมเวลาให้ทัน",STD(null,0)],
+ ["w3","📝","Mini test อ่าน 75 นาที","Part 5 ถึง 7 ของ Test 1",MINI("อ่าน Test 1 75 นาที",T1)],
+ ["w4","🏁","สอบเต็ม Test 3","เทียบกับ Test 2",FULL("สอบเต็ม Test 3",T3)],
+ ["w4","🔧","ทวนข้อผิด Test 3","ส่งข้อผิดให้ติวเตอร์อธิบาย",REVIEW],
+ ["w4","💪","เก็บจุดอ่อน","บทพิเศษตามผลสอบ",STD(null,0)],
+ ["w4","🏁","สอบเต็ม ETS","ข้อสอบตัวอย่างจากผู้ออกข้อสอบจริง",FULL("สอบเต็ม ETS","https://www.ets.org/toeic/test-takers/prepare/")],
+ ["w4","🔧","ทวนข้อผิด ETS","จุดอ่อนเดิมดีขึ้นไหม",REVIEW],
+ ["w4","🏁","สอบเต็มชุด PDF","ชุดจาก Memmoread มีเฉลยไทย",FULL("สอบเต็มชุด PDF",MM+"/toeic/toeic-test-pdf")],
+ ["w4","🔁","ทวนรวม","ข้อผิดทั้งเดือน และศัพท์",REVIEW],
+ ["w5","🌿","พัก","ฟังเบา ๆ พอ",REST()],
+ ["w5","😴","พักและเตรียมของ","บัตรประชาชน ใบนัดสอบ นอนเร็ว",REST("เช็กของไปสอบ")]
+];
+const THMON = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+const THDOW = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"];
+const CHEERS = ["เก่งมาก! 🎉","อีกวันแล้ว สู้ ๆ 💪","ทำครบ! หูกับตาเก่งขึ้นอีกนิดแล้ว ✨","เยี่ยม! อย่าลืมนอนเร็วนะ 😴"];
+
+const days = PLAN.map((p,i)=>{
+  const d = new Date(START); d.setDate(START.getDate()+i);
+  const id = d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  return {i, id, date:d, week:p[0], icon:p[1], topic:p[2], detail:p[3], tasks:p[4], lesson:p[5]||null};
+});
+/* one Memmoread vocab set per study day, alternating Listening / Reading word lists */
+{ let k = 0; days.forEach(d=>{ if(d.tasks.some(t=>t[0]==="vocab")){ k++; d.vocab = (k%2 ? "Actual-Listening-Test-" : "Actual-Reading-Test-") + Math.ceil(k/2); } }); }
+const required = day=>day.tasks.filter(t=>!t[5]);   // task[5] = bonus (optional)
+const STUDY_DAYS = days.filter(d=>d.week!=="w5").length;
+
+/* ---------- state (db) ---------- */
+const $ = s=>document.querySelector(s);
+let progress = {};           // id -> {tasks:{key:true}, hours, note}
+let db = null, sel = 0;
+const writing = {};          // id -> promise chain (one write at a time per day)
+const pending = {};          // id -> number of writes not yet confirmed
+function today0(){ const t = new Date(); t.setHours(0,0,0,0); return t; }
+const todayIdx = days.findIndex(d=>d.date.getTime()===today0().getTime());
+function isDone(day){ const p = progress[day.id]; return !!p && required(day).every(t=>p.tasks && p.tasks[t[0]]); }
+function doneCount(day){ const p = progress[day.id]; return required(day).filter(t=>p && p.tasks && p.tasks[t[0]]).length; }
+
+function loadLocal(){ try{ return JSON.parse(localStorage.getItem(LOCAL_KEY)) || SEED; }catch(e){ return SEED; } }
+function saveLocal(){ try{ localStorage.setItem(LOCAL_KEY, JSON.stringify(progress)); }catch(e){} }
+function save(day){
+  const body = Object.assign({tasks:{}, hours:0, note:""}, progress[day.id], {date:day.id, topic:day.topic, at:new Date().toISOString()});
+  if(!db){ saveLocal(); $("#nSave").textContent = "✓ บันทึกในเครื่องนี้"; return; }
+  $("#nSave").textContent = "กำลังบันทึก...";
+  /* while writes for this day are in flight, snapshots carry older data — keep the local copy until the last write lands */
+  pending[day.id] = (pending[day.id]||0) + 1;
+  writing[day.id] = (writing[day.id]||Promise.resolve()).then(()=>db.collection("progress").doc(day.id).set(progress[day.id] ? Object.assign({}, body, progress[day.id], {date:day.id, topic:day.topic, at:new Date().toISOString()}) : body))
+    .then(()=>{ $("#nSave").textContent = "✓ บันทึกแล้ว"; })
+    .catch(e=>{ $("#nSave").textContent = "บันทึกไม่ได้ ลองติ๊กใหม่"; })
+    .finally(()=>{ pending[day.id]--; });
+}
+
+/* ---------- calendar ---------- */
+function renderLegend(){
+  $("#legend").innerHTML = Object.entries(WEEKS).map(([k,w])=>`<span><i style="background:var(--${k})"></i>${w.label}</span>`).join("")
+    + `<span>● ติ๊กแล้ว</span>`;
+}
+function renderGrid(){
+  const g = $("#grid");
+  const head = ["อา","จ","อ","พ","พฤ","ศ","ส"].map((d,i)=>`<div class="dow${i===0?" sun":""}">${d}</div>`).join("");
+  const lead = START.getDay();
+  let cells = "";
+  for(let k=0;k<lead;k++) cells += `<div></div>`;
+  days.forEach(day=>{
+    const d = day.date, past = todayIdx>=0 ? day.i<todayIdx : today0()>d;
+    const dots = required(day).map(t=>`<i class="${progress[day.id]&&progress[day.id].tasks&&progress[day.id].tasks[t[0]]?"on":""}"></i>`).join("");
+    const cls = ["day", day.week, day.i===todayIdx?"today":"", day.i===sel?"sel":"", isDone(day)?"done":"", past?"past":""].join(" ");
+    const mon = d.getDate()===1 || day.i===0 ? `<small> ${THMON[d.getMonth()]}</small>` : "";
+    cells += `<button class="${cls}" data-i="${day.i}" aria-label="${d.getDate()} ${THMON[d.getMonth()]}: ${day.topic}${isDone(day)?" (ทำครบแล้ว)":""}">
+      <span class="num">${d.getDate()}${mon}</span><span class="ico" aria-hidden="true">${day.icon}</span>
+      <span class="topic">${day.topic}</span><span class="dots" aria-hidden="true">${dots}</span></button>`;
+  });
+  const tail = (7 - (lead + days.length) % 7) % 7;
+  for(let k=0;k<tail;k++){
+    const d = new Date(START); d.setDate(START.getDate()+days.length+k);
+    cells += `<div class="day blank"><span class="num">${d.getDate()}</span><span class="topic">วันสอบ? 📅</span></div>`;
+  }
+  g.innerHTML = head + cells;
+  g.querySelectorAll(".day[data-i]").forEach(b=>b.onclick=()=>{ select(+b.dataset.i); if(matchMedia("(max-width:900px)").matches) $("#note").scrollIntoView({behavior:"smooth",block:"start"}); });
+}
+function renderStats(){
+  const done = days.filter(d=>d.week!=="w5" && isDone(d)).length;
+  $("#stDone").textContent = `${done}/${STUDY_DAYS}`;
+  $("#barFill").style.width = (done/STUDY_DAYS*100)+"%";
+  const hours = Object.values(progress).reduce((n,p)=>n+(+p.hours||0),0);
+  $("#stHours").textContent = hours;
+  // streak: consecutive finished days ending today (or yesterday if today isn't finished yet)
+  let end = todayIdx>=0 ? todayIdx : (today0()>days[days.length-1].date ? days.length-1 : -1), s = 0;
+  if(end>=0 && !isDone(days[end])) end--;
+  for(let k=end;k>=0 && isDone(days[k]);k--) s++;
+  $("#stStreak").textContent = s + " 🔥";
+  const last = days[days.length-1].date, left = Math.max(0, Math.round((last - today0())/86400000)+1);
+  $("#stLeft").textContent = left;
+}
+
+/* ---------- sticky note ---------- */
+function select(i){
+  sel = Math.max(0, Math.min(days.length-1, i));
+  try{ localStorage.setItem("toeic-cal-sel", sel); }catch(e){}
+  renderGrid(); renderNote();
+}
+function renderNote(){
+  const day = days[sel], d = day.date, p = progress[day.id] || {};
+  $("#nDate").textContent = `${THDOW[d.getDay()]} ${d.getDate()} ${THMON[d.getMonth()]}`;
+  const wk = $("#nWeek"); wk.textContent = `วันที่ ${day.i+1}  ${WEEKS[day.week].label}`; wk.style.background = `var(--${day.week})`;
+  $("#nTopic").textContent = day.icon + " " + day.topic;
+  $("#nDetail").textContent = day.detail;
+  let n = 0;
+  $("#nTasks").innerHTML = day.tasks.map(t=>{
+    const [k, type, label, time, url0, bonus] = t, on = p.tasks && p.tasks[k];
+    const url = url0===VOCAB ? (day.vocab ? MM+"/vocab/vocab-data/"+day.vocab : null) : url0;
+    const why = type==="learn" || type==="daily" ? "รอติวเตอร์" : "";
+    const open = url ? `<a class="open" href="${url}" target="_blank" rel="noopener">เปิด ↗</a>` : (why ? `<span class="nolink">${why}</span>` : "");
+    return `<div class="trow"><span class="no">${bonus ? "⭐" : ++n}</span>
+      <button class="task${on?" on":""}${bonus?" bonus":""}" data-k="${k}" role="checkbox" aria-checked="${!!on}">
+      <span class="box" aria-hidden="true"></span><span class="t"><span class="ty ${type}">${TYPE[type]}</span>${label}${time?`<small>${time}</small>`:""}</span></button>${open}</div>`;
+  }).join("");
+  $("#nTasks").querySelectorAll(".task").forEach(b=>b.onclick=()=>toggle(day, b.dataset.k));
+  document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed", String(+c.dataset.h===+p.hours)));
+  const ta = $("#nNote"); if(document.activeElement!==ta) ta.value = p.note || "";
+  $("#nCheer").textContent = isDone(day) ? CHEERS[day.i % CHEERS.length] : "";
+  $("#prevBtn").disabled = sel===0; $("#nextBtn").disabled = sel===days.length-1;
+  $("#nSave").textContent = db ? "" : "กำลังเชื่อมต่อ...";
+}
+function edit(day, fn){
+  const cur = progress[day.id] || {tasks:{}, hours:0, note:""};
+  const next = {tasks:Object.assign({}, cur.tasks), hours:cur.hours||0, note:cur.note||""};
+  fn(next); progress[day.id] = next;
+}
+function toggle(day, k){
+  const was = isDone(day);
+  edit(day, p=>{ p.tasks[k] = !p.tasks[k]; });
+  save(day); renderGrid(); renderNote(); renderStats();
+  if(!was && isDone(day)) celebrate();
+}
+document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{
+  const day = days[sel];
+  edit(day, p=>{ p.hours = (+p.hours===+c.dataset.h) ? 0 : +c.dataset.h; });
+  save(day); renderNote(); renderStats();
+});
+let noteTimer = null;
+$("#nNote").oninput = e=>{
+  const day = days[sel], v = e.target.value;
+  edit(day, p=>{ p.note = v; });
+  clearTimeout(noteTimer); noteTimer = setTimeout(()=>save(day), 900);
+};
+/* plain-text summary the learner pastes into chat (on the website the tutor cannot read the browser storage) */
+$("#copyBtn").onclick = ()=>{
+  const lines = days.filter(d=>progress[d.id]).map(d=>{
+    const p = progress[d.id], t = d.tasks.filter(x=>p.tasks && p.tasks[x[0]]).map(x=>x[2]);
+    return `วันที่ ${d.i+1} (${d.id}): ${isDone(d)?"ครบ":"ยังไม่ครบ"} | ทำแล้ว: ${t.join(", ")||"-"} | ${p.hours||0} ชม.${p.note?" | จด: "+p.note:""}`;
+  });
+  const txt = "ผลปฏิทิน TOEIC\n" + (lines.join("\n") || "ยังไม่มี");
+  const b = $("#copyBtn"), ok = ()=>{ b.textContent = "✓ คัดลอกแล้ว ไปวางในแชต"; setTimeout(()=>b.textContent = "📋 คัดลอกผลส่งติวเตอร์", 2000); };
+  try{ navigator.clipboard.writeText(txt).then(ok, ()=>prompt("คัดลอกข้อความนี้", txt)); }catch(e){ prompt("คัดลอกข้อความนี้", txt); }
+};
+$("#prevBtn").onclick = ()=>select(sel-1);
+$("#nextBtn").onclick = ()=>select(sel+1);
+document.addEventListener("keydown", e=>{
+  if(e.target.closest && e.target.closest("textarea")) return;
+  if(e.key==="ArrowLeft") select(sel-1);
+  if(e.key==="ArrowRight") select(sel+1);
+});
+
+/* little confetti of pencil marks when a day is finished */
+function celebrate(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const note = $("#note"), r = note.getBoundingClientRect();
+  for(let k=0;k<18;k++){
+    const s = document.createElement("span");
+    s.textContent = ["✓","★","✏️","♥"][k%4];
+    s.style.cssText = `position:fixed;left:${r.left + r.width/2}px;top:${r.top + 60}px;font-family:var(--font-hand);font-size:22px;color:var(--done);pointer-events:none;z-index:20;transition:transform 1s ease-out,opacity 1s`;
+    document.body.appendChild(s);
+    requestAnimationFrame(()=>{ s.style.transform = `translate(${(Math.random()-.5)*300}px,${-80-Math.random()*160}px) rotate(${(Math.random()-.5)*90}deg)`; s.style.opacity = "0"; });
+    setTimeout(()=>s.remove(), 1100);
+  }
+}
+
+/* ---------- boot ---------- */
+let saved = null; try{ saved = localStorage.getItem("toeic-cal-sel"); }catch(e){}
+sel = todayIdx>=0 ? todayIdx : (saved!==null ? +saved : 0);
+renderLegend(); renderGrid(); renderNote(); renderStats();
+if(ONSITE){ $("#examLink").href = PAGE.examday; $("#examLink").removeAttribute("target"); $("#siteNote").hidden = false; }
+$("#dirLessons").innerHTML = days.filter(d=>d.lesson).map(d=>`<a class="btnlink" href="${d.lesson}" target="_blank" rel="noopener">วันที่ ${d.i+1}: ${d.topic}</a>`).join("");
+(async()=>{
+  try{ db = window.claude ? await window.claude.use("db") : null; }catch(e){ db = null; }
+  if(!db){ progress = loadLocal(); renderGrid(); renderNote(); renderStats(); $("#nSave").textContent = "บันทึกในเครื่องนี้"; return; }
+  $("#nSave").textContent = "";
+  db.collection("progress").onSnapshot(snap=>{
+    const next = {};
+    snap.docs.forEach(doc=>{ if(doc.exists) next[doc.id] = doc.data(); });
+    // keep local copies of days still being written, and the note being typed right now
+    Object.keys(pending).forEach(id=>{ if(pending[id]>0 && progress[id]) next[id] = progress[id]; });
+    if(document.activeElement===$("#nNote") && progress[days[sel].id]) next[days[sel].id] = progress[days[sel].id];
+    progress = next; renderGrid(); renderNote(); renderStats();
+  }, err=>{ $("#nSave").textContent = "โหลดไม่ได้ ลองเปิดหน้าใหม่"; });
+})();
+</script>
+
+</body>
+</html>

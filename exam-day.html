@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>โน้ตไปสอบ TOEIC เชียงใหม่</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sriracha&family=Mali:wght@400;600;700&display=swap">
+<style>
+/* Layout: แผ่นกระดาษกราฟจดโน้ต 2 คอลัมน์ · กล่องปากกาแดง = ต้องเช็กก่อน · ไฮไลต์เหลือง = ตัวเลขที่ต้องจำ · เทปกาวแปะหัวการ์ด */
+:root{
+  --paper:#f7fafc; --grid:#dbe7f2; --ink:#1f3a5f; --ink-soft:#4d6684;
+  --red:#c8322b; --hl:#ffe76a; --tape:rgba(150,200,190,.55); --card:#ffffff; --line:#b9cbe0;
+  --hand:"Sriracha","Mali",cursive; --body:"Mali","Sriracha",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#16202c; --grid:#1f2c3b; --ink:#e3ecf6; --ink-soft:#a9bcd2;
+  --red:#ff7b6e; --hl:rgba(255,214,64,.38); --tape:rgba(110,170,160,.45); --card:#1c2836; --line:#33465c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#16202c; --grid:#1f2c3b; --ink:#e3ecf6; --ink-soft:#a9bcd2;
+  --red:#ff7b6e; --hl:rgba(255,214,64,.38); --tape:rgba(110,170,160,.45); --card:#1c2836; --line:#33465c; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;
+  color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.7;
+}
+.wrap{max-width:1040px;margin:0 auto;padding-block:28px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+header{display:grid;gap:6px;margin-bottom:26px}
+.eyebrow{font-family:var(--hand);color:var(--ink-soft);font-size:1rem;letter-spacing:.02em}
+h1{font-family:var(--hand);font-weight:400;font-size:clamp(2rem,6vw,3.2rem);line-height:1.15;margin:0;text-wrap:balance}
+h1 .scrib{position:relative;white-space:nowrap}
+h1 .scrib::after{content:"";position:absolute;left:-2%;right:-2%;bottom:.02em;height:.32em;background:var(--hl);z-index:-1;transform:rotate(-1.2deg);border-radius:40% 10% 50% 20%}
+h1 .scrib{z-index:0;isolation:isolate}
+.sub{color:var(--ink-soft);margin:0}
+
+.hl{background:linear-gradient(transparent 52%,var(--hl) 52%,var(--hl) 92%,transparent 92%);padding:0 2px;font-weight:700}
+.red{color:var(--red)}
+.small{font-size:.9rem;color:var(--ink-soft)}
+
+/* กล่องปากกาแดง */
+.alert{border:2.5px solid var(--red);border-radius:14px 18px 12px 20px/18px 12px 20px 14px;padding:16px 18px;margin-bottom:28px;transform:rotate(-.4deg);background:var(--card)}
+.alert h2{font-family:var(--hand);font-weight:400;color:var(--red);margin:0 0 8px;font-size:1.45rem}
+.alert ol{margin:0;padding-left:1.3em;display:grid;gap:10px}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:28px 26px;align-items:start}
+.col{display:grid;gap:28px;min-width:0}
+@media (max-width:760px){.grid{grid-template-columns:1fr}}
+
+.card{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:22px 18px 16px;box-shadow:2px 3px 0 var(--line);min-width:0}
+.card:nth-child(odd){transform:rotate(.35deg)} .card:nth-child(even){transform:rotate(-.3deg)}
+.card::before{content:"";position:absolute;top:-11px;left:50%;width:92px;height:22px;margin-left:-46px;background:var(--tape);transform:rotate(-3deg)}
+.card h2{font-family:var(--hand);font-weight:400;font-size:1.4rem;margin:0 0 8px;line-height:1.3}
+.card h2 small{font-family:var(--body);font-size:.85rem;color:var(--ink-soft);margin-left:6px}
+.card p{margin:0 0 8px}
+ul.dash{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+ul.dash li{padding-left:1.2em;position:relative}
+ul.dash li::before{content:"–";position:absolute;left:0;color:var(--ink-soft)}
+
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+td,th{text-align:left;padding:6px 4px;border-bottom:1.5px dashed var(--line);vertical-align:top}
+th{font-family:var(--hand);font-weight:400;color:var(--ink-soft)}
+td.num{white-space:nowrap;font-weight:700;font-variant-numeric:tabular-nums}
+.tablebox{overflow-x:auto}
+
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:6px}
+.fact{border:1.5px dashed var(--line);border-radius:10px;padding:8px;text-align:center}
+.fact b{display:block;font-family:var(--hand);font-weight:400;font-size:1.5rem;line-height:1.2}
+.fact span{font-size:.82rem;color:var(--ink-soft)}
+@media (max-width:420px){.facts{grid-template-columns:repeat(2,1fr)}}
+
+ol.steps{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;gap:10px}
+ol.steps li{counter-increment:s;padding-left:2.3em;position:relative}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:.1em;width:1.6em;height:1.6em;border:2px solid var(--ink);border-radius:50% 45% 55% 48%;display:grid;place-items:center;font-family:var(--hand);font-size:.95rem;line-height:1}
+
+.phone{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:6px 0}
+.phone code{font-family:var(--hand);font-size:1.25rem;user-select:all;background:none}
+button.copy{font-family:var(--body);font-size:.8rem;border:1.5px solid var(--ink);background:transparent;color:var(--ink);border-radius:999px;padding:2px 10px;cursor:pointer}
+button.copy:focus-visible,.check input:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+
+.timeline{list-style:none;margin:0;padding:0 0 0 14px;border-left:2px dashed var(--ink-soft);display:grid;gap:12px}
+.timeline li{position:relative;padding-left:12px}
+.timeline li::before{content:"";position:absolute;left:-21px;top:.55em;width:12px;height:12px;border-radius:50%;background:var(--card);border:2px solid var(--ink)}
+.timeline li.warn::before{border-color:var(--red);background:var(--red)}
+.timeline .when{font-family:var(--hand);display:block;line-height:1.3}
+
+.check{display:grid;gap:6px}
+.check label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.check input{appearance:none;flex:none;width:20px;height:20px;margin-top:.3em;border:2px solid var(--ink);border-radius:4px 6px 3px 5px;display:grid;place-items:center;cursor:pointer;background:transparent}
+.check input:checked::after{content:"✓";font-family:var(--hand);color:var(--red);font-size:1.25rem;line-height:1;transform:translate(1px,-2px)}
+.check input:checked + span{text-decoration:line-through;text-decoration-color:var(--red);color:var(--ink-soft)}
+.check h3{font-family:var(--hand);font-weight:400;font-size:1.05rem;margin:8px 0 0;color:var(--ink-soft)}
+
+.sticky{background:var(--hl);color:#3a3100;padding:12px 14px;border-radius:2px;transform:rotate(1deg);box-shadow:2px 3px 0 rgba(0,0,0,.12);font-size:.95rem}
+:root[data-theme="dark"] .sticky{color:var(--ink)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .sticky{color:var(--ink)}}
+
+footer{margin-top:40px;font-size:.85rem;color:var(--ink-soft)}
+footer h2{font-family:var(--hand);font-weight:400;font-size:1.1rem;margin:0 0 4px;color:var(--ink)}
+footer ul{margin:0;padding-left:1.2em}
+footer a{color:var(--ink-soft)}
+a{color:var(--ink)}
+.homebtn{justify-self:start;background:var(--ink);color:var(--paper);text-decoration:none;font-weight:700;padding:8px 16px;border-radius:999px}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px}
+.srcbtn{border:1.5px solid var(--ink-soft);color:var(--ink);text-decoration:none;border-radius:999px;padding:6px 12px;font-size:.85rem}
+@media (max-width:560px){ .card{transform:none!important} .alert{transform:none} }
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header>
+    <a class="homebtn" href="https://claude.ai/artifact/1jb5VHszRj9v4h7qVePJMn" target="_blank" rel="noopener">🏠 หน้าหลัก</a>
+    <div class="eyebrow">จดไว้ 25 ต.ค. 2569</div>
+    <h1>โน้ตไปสอบ <span class="scrib">TOEIC</span> ที่เชียงใหม่</h1>
+    <p class="sub">ค่าสอบ วิธีจอง ของที่ต้องเตรียม<br>ข้อมูลเปลี่ยนได้ โทรถามก่อนเสมอ</p>
+  </header>
+
+  <section class="alert">
+    <h2>เช็ก 2 เรื่องก่อนจอง!</h2>
+    <ol>
+      <li><b>ศูนย์เชียงใหม่ยังเปิดไหม?</b><br>เว็บ CPA บอกว่าจองได้ แต่อีกเว็บบอกว่า <span class="red">ปิดตั้งแต่ 1 ม.ค. 69</span><br>→ <span class="hl">โทรถามก่อน</span></li>
+      <li><b>ลอยกระทง อังคาร 24 พ.ย.</b><br>ยี่เป็ง คนแน่น ที่พักแพง รถติด<br>→ เลี่ยงวันที่ 23–25 พ.ย.</li>
+    </ol>
+  </section>
+
+  <div class="grid">
+    <div class="col">
+
+      <article class="card">
+        <h2>ข้อสอบ</h2>
+        <div class="facts">
+          <div class="fact"><b>200</b><span>ข้อ</span></div>
+          <div class="fact"><b>2 ชม.</b><span>ฟัง 45' อ่าน 75'</span></div>
+          <div class="fact"><b>990</b><span>เต็ม</span></div>
+        </div>
+        <ul class="dash">
+          <li>ระบายด้วยดินสอ</li>
+          <li>อยู่ในห้อง<span class="hl">ราว 2.5 ชม.</span></li>
+          <li>ผิด<b>ไม่ติดลบ</b> ระบายให้ครบ</li>
+          <li>ผลใช้ได้ <span class="hl">2 ปี</span></li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>ค่าใช้จ่าย</h2>
+        <div class="tablebox"><table>
+          <tr><th>รายการ</th><th>บาท</th></tr>
+          <tr><td>ค่าสอบรอบปกติ<br><span class="small">จ่ายวันสอบ เงินสด บัตร QR</span></td><td class="num"><span class="hl">1,800</span></td></tr>
+          <tr><td>รอบ Public<br><span class="small">จ่ายล่วงหน้า เดือนละรอบ</span></td><td class="num">≈1,850</td></tr>
+          <tr><td>มาสาย ไม่มา เลื่อนวันสอบ</td><td class="num red">500</td></tr>
+          <tr><td>ใบคะแนนเพิ่ม</td><td class="num">100</td></tr>
+          <tr><td>รถไปกลับ และที่พัก</td><td class="num">เช็กเอง</td></tr>
+        </table></div>
+        <p class="small">ยังไม่เจอราคาปี 69 จาก CPA ถามตอนโทร</p>
+      </article>
+
+      <article class="card">
+        <h2>สอบแบบไหน</h2>
+        <div class="tablebox"><table>
+          <tr><th></th><th>รอบปกติ</th><th>Public</th></tr>
+          <tr><td>วันสอบ</td><td>จ.–ส.</td><td>เดือนละครั้ง</td></tr>
+          <tr><td>ใช้ที่</td><td>ในไทย</td><td>ไทยและต่างประเทศ</td></tr>
+          <tr><td>จ่าย</td><td>วันสอบ</td><td>ล่วงหน้า</td></tr>
+        </table></div>
+        <p class="small" style="margin-top:8px">ใช้ในไทย รอบปกติก็พอ</p>
+      </article>
+
+      <article class="card">
+        <h2>รอบสอบ</h2>
+        <ul class="dash">
+          <li>จ.–ส. รอบ <span class="hl">09:00</span> และ <span class="hl">13:00</span> <span class="small">(บางที่เขียน 13:30)</span></li>
+          <li>ไม่มีวันอาทิตย์</li>
+          <li>ถามวันว่างตอนโทร</li>
+        </ul>
+        <div class="sticky" style="margin-top:12px">
+          เชียงราย ไป เชียงใหม่ ราว 3 ชม.<br>
+          <b>รอบ 09:00</b> ไปนอนคืนก่อน<br>
+          <b>รอบ 13:00</b> ขึ้นรถเช้าได้ เผื่อรถติด
+        </div>
+      </article>
+
+    </div>
+    <div class="col">
+
+      <article class="card">
+        <h2>จอง <small>โทรเท่านั้น</small></h2>
+        <div class="phone"><span>ศูนย์เชียงใหม่</span><code id="p-cm">053-241-273</code><span class="small">ถึง 5</span><button class="copy" type="button" data-copy="053241273">คัดลอก</button></div>
+        <div class="phone"><span>Call Center</span><code id="p-bkk">02-260-7061</code><button class="copy" type="button" data-copy="022607061">คัดลอก</button></div>
+        <p class="small">จ.–ส. 08:00–16:30 จองทางอีเมลไม่ได้<br>LINE @cpa_thailand</p>
+        <ol class="steps">
+          <li>ถาม: ยังสอบเชียงใหม่ได้ไหม ศูนย์อยู่ไหน ค่าสอบเท่าไหร่</li>
+          <li>บอกชื่ออังกฤษ<b>ตรงกับบัตร</b> วันเกิด วันที่อยากสอบ</li>
+          <li>จองล่วงหน้า <span class="hl">1–2 สัปดาห์</span></li>
+          <li>จดวัน เวลา ที่อยู่ศูนย์</li>
+          <li>เลื่อนต้องแจ้งก่อน<b>1 วันทำการ</b> ไม่งั้นปรับ 500</li>
+        </ol>
+      </article>
+
+      <article class="card">
+        <h2>ไทม์ไลน์</h2>
+        <ul class="timeline">
+          <li><span class="when">25–31 ต.ค.</span>โทรเช็กศูนย์ ถามรอบปลาย พ.ย.</li>
+          <li><span class="when">ภายใน 10 พ.ย.</span>จองสอบ รถ ที่พัก</li>
+          <li><span class="when">15–21 พ.ย.</span>สอบเต็ม<b>เวลาเดียวกับสอบจริง</b> ไม่ขีดเขียน</li>
+          <li class="warn"><span class="when red">23–25 พ.ย. ยี่เป็ง</span>เลี่ยงถ้าได้</li>
+          <li><span class="when">คืนก่อนสอบ</span>จัดกระเป๋า นอนให้พอ</li>
+          <li><span class="when">หลังสอบ 3 วันทำการ</span>ผลออก</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>เช็กลิสต์ <small>ติ๊กได้</small></h2>
+        <div class="check" id="checklist">
+          <h3>คืนก่อนสอบ</h3>
+          <label><input type="checkbox" id="c1"><span><b>บัตรประชาชนตัวจริง</b> ไม่หมดอายุ สำเนาไม่ได้</span></label>
+          <label><input type="checkbox" id="c2"><span>เงินค่าสอบ 1,800 และเงินสำรอง</span></label>
+          <label><input type="checkbox" id="c3"><span>เสื้อกันหนาว ห้องแอร์เย็น</span></label>
+          <label><input type="checkbox" id="c4"><span>จำที่อยู่หอ ไว้ให้ส่งผลทางไปรษณีย์</span></label>
+          <label><input type="checkbox" id="c5"><span>ตั๋วรถ ที่อยู่ศูนย์ ที่อยู่ที่พัก</span></label>
+          <h3>เช้าวันสอบ</h3>
+          <label><input type="checkbox" id="c6"><span>กินเบา ๆ เข้าห้องน้ำก่อน</span></label>
+          <label><input type="checkbox" id="c7"><span>ถึงศูนย์ <span class="hl">1 ชม. ก่อน</span> เคาน์เตอร์ปิดก่อน 10 นาที</span></label>
+          <label><input type="checkbox" id="c8"><span>ฝากมือถือ นาฬิกา กระเป๋าไว้ข้างนอก</span></label>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>กฎในห้อง</h2>
+        <ul class="dash">
+          <li class="red"><b>ห้ามขีดเขียนในสมุดข้อสอบ</b> ผลเป็นโมฆะ</li>
+          <li>นั่งตามที่จัดให้</li>
+          <li>แจกข้อสอบแล้วห้ามเข้า</li>
+          <li>มือถือเข้าห้องไม่ได้ แม้ปิดเครื่อง</li>
+          <li>ทุจริต ผลโมฆะ ไม่คืนเงิน</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>รับผล</h2>
+        <ul class="dash">
+          <li>ผลออก <span class="hl">3 วันทำการ</span></li>
+          <li>รับที่ศูนย์ใน 10 วันทำการ เอา<b>ใบลงทะเบียน</b>และบัตรไป</li>
+          <li>หรือส่งไปรษณีย์ (สะดวกกว่า)</li>
+          <li>ไม่บอกผลทางโทรศัพท์</li>
+        </ul>
+        <p class="small" style="margin-top:6px">เก็บใบลงทะเบียนไว้ อย่าทิ้ง</p>
+      </article>
+
+    </div>
+  </div>
+
+  <footer>
+    <h2>แหล่งข้อมูล (25 ต.ค. 69)</h2>
+    <div class="btnrow">
+      <a class="srcbtn" href="https://cpathailand.co.th/test-reservation/reservation-process/" target="_blank" rel="noopener">CPA วิธีจอง</a>
+      <a class="srcbtn" href="https://cpathailand.co.th/" target="_blank" rel="noopener">CPA หน้าแรก</a>
+      <a class="srcbtn" href="https://toeickiller.com/toeic-information/" target="_blank" rel="noopener">ประกาศปิดสาขา</a>
+      <a class="srcbtn" href="https://memmoread.com/toeic/test-centers" target="_blank" rel="noopener">ศูนย์สอบ Memmoread</a>
+      <a class="srcbtn" href="https://www.englishtestlab-toeic.app/toeic-test-center-chiangmai" target="_blank" rel="noopener">ศูนย์เชียงใหม่</a>
+      <a class="srcbtn" href="https://www.ofm.co.th/blog/loy-krathong-2569/amp/" target="_blank" rel="noopener">วันลอยกระทง</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  /* on the website (GitHub Pages) home is the site index, not the claude.ai artifact */
+  if(/github\.io$/.test(location.hostname)){ var hb=document.querySelector(".homebtn"); hb.href="index.html"; hb.removeAttribute("target"); }
+  var KEY='toeic-exam-day-checklist';
+  var saved={};
+  try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){}
+  document.querySelectorAll('#checklist input').forEach(function(box){
+    if(saved[box.id])box.checked=true;
+    box.addEventListener('change',function(){
+      saved[box.id]=box.checked;
+      try{localStorage.setItem(KEY,JSON.stringify(saved))}catch(e){}
+    });
+  });
+  document.querySelectorAll('button.copy').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var done=function(){btn.textContent='คัดลอกแล้ว';setTimeout(function(){btn.textContent='คัดลอก'},1500)};
+      var code=btn.parentNode.querySelector('code');
+      var fallback=function(){var r=document.createRange();r.selectNodeContents(code);var s=getSelection();s.removeAllRanges();s.addRange(r)};
+      try{navigator.clipboard.writeText(btn.dataset.copy).then(done,fallback)}catch(e){fallback()}
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
