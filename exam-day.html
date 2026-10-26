@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>โน้ตไปสอบ TOEIC</title>
+<title>TOEIC Exam Day Guide</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sriracha&family=Mali:wght@400;600;700&display=swap">
@@ -92,7 +92,7 @@ button.copy:focus-visible,.check input:focus-visible{outline:2px solid var(--red
 .check label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
 .check input{appearance:none;flex:none;width:20px;height:20px;margin-top:.3em;border:2px solid var(--ink);border-radius:4px 6px 3px 5px;display:grid;place-items:center;cursor:pointer;background:transparent}
 .check input:checked::after{content:"✓";font-family:var(--hand);color:var(--red);font-size:1.25rem;line-height:1;transform:translate(1px,-2px)}
-.check input:checked + span{text-decoration:line-through;text-decoration-color:var(--red);color:var(--ink-soft)}
+.check input:checked + span::after{content:" ✓ เสร็จ";font-family:var(--hand);color:var(--red);white-space:nowrap}
 .check h3{font-family:var(--hand);font-weight:400;font-size:1.05rem;margin:8px 0 0;color:var(--ink-soft)}
 
 .sticky{background:var(--hl);color:#3a3100;padding:12px 14px;border-radius:2px;transform:rotate(1deg);box-shadow:2px 3px 0 rgba(0,0,0,.12);font-size:.95rem}
@@ -104,6 +104,7 @@ footer h2{font-family:var(--hand);font-weight:400;font-size:1.1rem;margin:0 0 4p
 footer ul{margin:0;padding-left:1.2em}
 footer a{color:var(--ink-soft)}
 a{color:var(--ink)}
+.ghostbtn{background:transparent!important;color:var(--ink)!important;border:2px solid var(--ink)}
 .homebtn{justify-self:start;background:var(--ink);color:var(--paper);text-decoration:none;font-weight:700;padding:8px 16px;border-radius:999px}
 .btnrow{display:flex;flex-wrap:wrap;gap:8px}
 .srcbtn{border:1.5px solid var(--ink-soft);color:var(--ink);text-decoration:none;border-radius:999px;padding:6px 12px;font-size:.85rem}
@@ -133,23 +134,24 @@ a{color:var(--ink)}
 
 <div class="wrap">
   <header>
-    <a class="homebtn" href="https://claude.ai/artifact/1jb5VHszRj9v4h7qVePJMn" target="_blank" rel="noopener">🏠 หน้าหลัก</a>
-    <div class="eyebrow">อัปเดต 25 ต.ค. 2569</div>
+    <div class="btnrow"><a class="homebtn" href="https://claude.ai/artifact/1jb5VHszRj9v4h7qVePJMn" target="_blank" rel="noopener">🏠 หน้าหลัก</a><a class="homebtn ghostbtn" id="tripBtn" href="https://claude.ai/artifact/TUAFTawp2MCMw8jTt2zACq" target="_blank" rel="noopener">🚌 แผนเดินทาง</a></div>
+    <div class="eyebrow">อัปเดต 26 ต.ค. 2569</div>
     <h1>โน้ตไปสอบ <span class="scrib">TOEIC</span></h1>
     <p class="sub">รอบสอบ ค่าสอบ วิธีจอง ของที่ต้องเตรียม</p>
     <div class="chips">
-      <span class="chipx">📅 แนะนำ ส. 28 พ.ย.</span>
+      <span class="chipx">📅 ส. 28 พ.ย. 9:30</span>
       <span class="chipx">💻 สอบคอม</span>
       <span class="chipx">💰 1,850 บาท</span>
-      <span class="chipx">📍 เชียงใหม่</span>
+      <span class="chipx">📍 ม.ฟาร์อีสเทอร์น ถ.มหิดล</span>
     </div>
+    <p class="small">✅ จองสอบแล้ว: อาคารวัฒนาราชนครินทร์ 80 ชั้น 4 ห้องคอม E-Commerce<br>✅ จองที่พักแล้ว: แพลทินั่ม แอร์พอร์ต (เดินไปสนามสอบ ~400 ม.)<br>⏳ ตั๋วรถ ไป ศ. 27 กลับ อา. 29 รอเปิดจอง</p>
   </header>
 
   <section class="alert">
     <h2>สรุปสั้น ๆ</h2>
     <ol>
       <li><b>ศูนย์สอบประจำที่เชียงใหม่ปิดแล้ว</b> (ตั้งแต่ 1 ม.ค. 69)<br>เชียงใหม่ตอนนี้มีแค่ <span class="hl">Open Testing</span> เป็นรอบ ๆ จองและจ่ายล่วงหน้า</li>
-      <li><b>มี 2 แบบ: กระดาษ และคอมพิวเตอร์</b><br>เชียงใหม่ 28 พ.ย. เป็นรอบ<span class="hl">คอมพิวเตอร์</span></li>
+      <li><b>รอบของเรา: ส. 28 พ.ย. 9:30 สอบคอม</b><br>ถึงสนามสอบ <span class="hl">8:30</span> ปิดเช็กอิน 9:20</li>
       <li><b>ลอยกระทง อังคาร 24 พ.ย.</b><br>ยี่เป็ง คนแน่น ที่พักแพง</li>
     </ol>
   </section>
@@ -163,9 +165,9 @@ a{color:var(--ink)}
           <div class="round"><div class="date"><b>7</b><span>ส. พ.ย.</span></div><div class="info"><b>Open Testing</b><span>อาคารศิริพาณิชย์</span></div><div class="price">1,850</div></div>
           <div class="round"><div class="date"><b>21</b><span>ส. พ.ย.</span></div><div class="info"><b>Open Testing</b><span>อาคารศิริพาณิชย์</span></div><div class="price">1,850</div></div>
           <div class="round"><div class="date"><b>21</b><span>14:00</span></div><div class="info"><b>Public Test</b><span>อาคารศิริพาณิชย์</span></div><div class="price">2,100</div></div>
-          <div class="round pick"><div class="date"><b>28</b><span>ส. พ.ย.</span></div><div class="info"><b>💻 สอบคอม</b><span>ม.ฟาร์อีสเทอร์น</span></div><div class="price">1,850</div><span class="stamp">แนะนำ</span></div>
+          <div class="round pick"><div class="date"><b>28</b><span>ส. พ.ย.</span></div><div class="info"><b>💻 สอบคอม</b><span>ม.ฟาร์อีสเทอร์น</span></div><div class="price">1,850</div><span class="stamp">รอบของเรา</span></div>
         </div>
-        <p class="small" style="margin-top:10px">28 พ.ย. พ้นแผนเรียน 23 พ.ย. และพ้นลอยกระทง<br>เวลาของรอบที่ไม่ได้เขียน ถามตอนจอง</p>
+        <p class="small" style="margin-top:10px">28 พ.ย. เริ่ม 9:30 พ้นลอยกระทงแล้ว</p>
       </article>
 
       <article class="card">
@@ -201,7 +203,8 @@ a{color:var(--ink)}
           <tr><td>Open Testing เชียงใหม่<br><span class="small">จ่ายตอนจองใน LINE</span></td><td class="num"><span class="hl">1,850</span></td></tr>
           <tr><td>Public Test เชียงใหม่</td><td class="num">2,100</td></tr>
           <tr><td>มาสาย ไม่มา ยกเลิกช้า</td><td class="num red">มีค่าปรับ</td></tr>
-          <tr><td>รถ และที่พัก</td><td class="num">เช็กเอง</td></tr>
+          <tr><td>ที่พัก<br><span class="small">✅ จองแล้ว</span></td><td class="num">–</td></tr>
+          <tr><td>รถไปกลับ<br><span class="small">รอเปิดจอง</span></td><td class="num">–</td></tr>
         </table></div>
         <p class="small">ค่าปรับรอบ Public กรุงเทพคือ 2,000 ถามของเชียงใหม่ตอนจอง</p>
       </article>
@@ -224,7 +227,7 @@ a{color:var(--ink)}
     <div class="col">
 
       <article class="card">
-        <h2>จอง</h2>
+        <h2>จอง <small>✅ จองสอบแล้ว เก็บไว้ดูเบอร์</small></h2>
         <a class="bigbtn" href="https://shop.line.me/@cpa_thailand/collection/245805" target="_blank" rel="noopener">จองรอบเชียงใหม่ใน LINE shop</a>
         <div class="phone"><span>Call Center</span><code id="p-bkk">02-260-7061</code><button class="copy" type="button" data-copy="022607061">คัดลอก</button></div>
         <p class="small">จ.–ส. 08:00–16:30 จองทางอีเมลไม่ได้<br>LINE @cpa_thailand</p>
@@ -240,11 +243,14 @@ a{color:var(--ink)}
       <article class="card">
         <h2>ไทม์ไลน์</h2>
         <ul class="timeline">
-          <li><span class="when">สัปดาห์นี้</span>เลือกรอบ แล้วจองใน LINE shop</li>
-          <li><span class="when">หลังจองได้</span>จองรถ ที่พัก</li>
+          <li><span class="when">✅ เสร็จแล้ว</span>จองสอบ และจองที่พัก</li>
+          <li><span class="when">ปลาย ต.ค.</span>ตั๋วรถเปิดจอง (ล่วงหน้าราว 1 เดือน)</li>
           <li><span class="when">15–21 พ.ย.</span>สอบเต็มเวลาเดียวกับสอบจริง ไม่ขีดเขียน</li>
           <li class="warn"><span class="when red">23–25 พ.ย. ยี่เป็ง</span>คนแน่นเชียงใหม่</li>
-          <li><span class="when">คืนก่อนสอบ</span>จัดกระเป๋า นอนให้พอ</li>
+          <li><span class="when">พฤ. 26 พ.ย.</span>จัดกระเป๋า</li>
+          <li><span class="when">ศ. 27 พ.ย.</span>ไปเชียงใหม่ ไปดูอาคาร 80 ถ้าถึงก่อนมืด</li>
+          <li class="warn"><span class="when red">ส. 28 พ.ย. 8:30</span>ถึงสนามสอบ สอบ 9:30</li>
+          <li><span class="when">อา. 29 พ.ย.</span>กลับบ้าน</li>
         </ul>
       </article>
 
@@ -256,7 +262,7 @@ a{color:var(--ink)}
           <label><input type="checkbox" id="c2"><span>หลักฐานการจอง และเงินสำรอง</span></label>
           <label><input type="checkbox" id="c3"><span>เสื้อกันหนาว ห้องแอร์เย็น</span></label>
           <label><input type="checkbox" id="c4"><span>จำที่อยู่หอ ไว้ส่งผลทางไปรษณีย์</span></label>
-          <label><input type="checkbox" id="c5"><span>ตั๋วรถ ที่อยู่สนามสอบ ที่อยู่ที่พัก</span></label>
+          <label><input type="checkbox" id="c5"><span>ตั๋วรถไปและกลับ</span></label>
           <h3>เช้าวันสอบ</h3>
           <label><input type="checkbox" id="c6"><span>กินเบา ๆ เข้าห้องน้ำก่อน</span></label>
           <label><input type="checkbox" id="c7"><span>เช็กอินเปิด <span class="hl">1 ชม. ก่อน</span> ปิดก่อน 10 นาที</span></label>
@@ -317,7 +323,7 @@ a{color:var(--ink)}
 <script>
 (function(){
   /* on the website (GitHub Pages) home is the site index, not the claude.ai artifact */
-  if(/github\.io$/.test(location.hostname)){ var hb=document.querySelector(".homebtn"); hb.href="index.html"; hb.removeAttribute("target"); }
+  if(/github\.io$/.test(location.hostname)){ var hb=document.querySelector(".homebtn"); hb.href="index.html"; hb.removeAttribute("target"); var tb=document.getElementById("tripBtn"); if(tb) tb.remove(); }
   var KEY='toeic-exam-day-checklist';
   var saved={};
   try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){}
