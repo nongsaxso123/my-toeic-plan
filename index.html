@@ -218,7 +218,7 @@ textarea{width:100%;min-height:70px;background:transparent;border:none;border-bo
     <div class="dirgrid">
       <div class="dirbox">
         <h3><span class="ty learn">📘 บทเรียน</span></h3>
-        <p class="sub">วันละบท สอนแล้วมี Mock</p>
+        <p class="sub">วันละบท มี Grammar ฟัง และอ่าน</p>
         <div class="btns" id="dirLessons"></div>
       </div>
       <div class="dirbox">
@@ -230,19 +230,10 @@ textarea{width:100%;min-height:70px;background:transparent;border:none;border-bo
         <h3><span class="ty test">📝 สอบเต็ม</span></h3>
         <p class="sub">เปิดเฉพาะวันที่ปฏิทินบอก</p>
         <ul>
-          <li>Test 2 วันที่ 2</li>
-          <li>Test 3 วันที่ 22</li>
-          <li>Test 1 ไม่ต้องเปิด อยู่ในบทเรียนแล้ว</li>
+          <li>Test 2 ✓ เสร็จ</li>
+          <li>Test 3 วันที่ 20 พ.ย.</li>
+          <li>Test 1 อ่านรวด 19 พ.ย.</li>
         </ul>
-      </div>
-      <div class="dirbox">
-        <h3><span class="ty review">🔁 ทวน grammar</span></h3>
-        <p class="sub">เปิดเมื่อลืมกฎ</p>
-        <div class="btns">
-          <a class="btnlink ghost" href="https://claude.ai/artifact/4bmar5KJWNwvJPYsrGfMTo" target="_blank" rel="noopener">ชนิดคำ และ tense</a>
-          <a class="btnlink ghost" href="https://claude.ai/artifact/CYTmq1ccDyrR7jevFtk2bV" target="_blank" rel="noopener">คำเชื่อม และ the most</a>
-          <a class="btnlink ghost" href="https://claude.ai/artifact/Rutf2ziMnx9t93nJkBbDR3" target="_blank" rel="noopener">V-ing และ to V</a>
-        </div>
       </div>
       <div class="dirbox">
         <h3>🧳 วันสอบจริง</h3>
@@ -258,9 +249,9 @@ textarea{width:100%;min-height:70px;background:transparent;border:none;border-bo
 const START = new Date(2026, 9, 25);
 const EXAM = new Date(2026, 10, 28);
 const WEEKS = {
-  w1:{label:"สัปดาห์ 1: Part 1, 2, 5"},
-  w2:{label:"สัปดาห์ 2: Part 3, 4, 6"},
-  w3:{label:"สัปดาห์ 3: Part 7"},
+  w1:{label:"สัปดาห์ 1: เริ่มใหม่ Grammar หลัก"},
+  w2:{label:"สัปดาห์ 2: Grammar ต่อ และ Part 6"},
+  w3:{label:"สัปดาห์ 3: Reading และ Part 3–4"},
   w4:{label:"สัปดาห์ 4: สอบเต็ม"},
   w5:{label:"พัก และเดินทาง"},
   w6:{label:"วันสอบ"}
@@ -279,7 +270,8 @@ const PAGE = {
   d1:"https://claude.ai/artifact/DMbn4wAevcTfxWqfgz9k1Q",
   daily:"https://claude.ai/artifact/Jbhi6ZQVo1AWRxw9NZwu7R",
   examday: ONSITE ? "exam-day.html" : "https://claude.ai/artifact/QmfaPUZ3ZYL1tvCodfu2BF",
-  trip: ONSITE ? null : "https://claude.ai/artifact/TUAFTawp2MCMw8jTt2zACq"
+  trip: ONSITE ? null : "https://claude.ai/artifact/TUAFTawp2MCMw8jTt2zACq",
+  L: {1:"https://claude.ai/artifact/Ca3gsZCQnYQ1JWEMBsDts9"}   // lesson number -> artifact url (TOEIC Lesson 01, 02 ...), filled in as each lesson is made
 };
 const TYPE = {learn:"📘 บทเรียน", daily:"🎙️ ฝึก", test:"📝 ข้อสอบ", vocab:"🎮 ศัพท์", review:"🔁 ทบทวน", rest:"🌿 พัก", trip:"🚌 เดินทาง"};
 /* task = [key, type, label, time, url|null, bonus?] — keys stay the same as before so saved ticks keep working */
@@ -294,41 +286,45 @@ const STD = (lesson, set)=>[tLesson(lesson), tListen(set), tRead(set), tVocab, t
 const MINI = (label, url)=>[["test","test",label,"60 นาที",url||null], ["review","review","ทวนข้อผิด จดกฎที่ลืม","40 นาที",null], tVocab];
 const FULL = (label, url)=>[["test","test",label,"2 ชั่วโมง",url], ["score","test","จดคะแนนลงช่องบันทึก","5 นาที",null], tVocab];
 const REVIEW = [["review","review","ดูข้อผิดทีละข้อ","60 นาที",null], ["listen","review","ฟังข้อผิดซ้ำ","30 นาที",null], tVocab, ["half","review","ฝึก Part ที่อ่อนสุด","",null,true]];
+/* new plan from 30 Oct: 4 small boxes a day. Busy day = box 1 + vocab is enough (listen / read are ⭐ extras).
+   One lesson page per day holds the grammar, the listening set (#listen) and the reading set (#read). */
+const BOX = url=>[["lesson","learn","Grammar ใหม่ 1 เรื่อง และข้อจริง","30 นาที",url], tVocab,
+  ["listen","learn","ฟังข้อจริง รอบเดียว","25 นาที",url&&url+"#listen",true],
+  ["read","learn","อ่าน Part 7 แค่ 2–3 บทความ","25 นาที",url&&url+"#read",true]];
+const WORK = ["w5","💼","ติดงาน","ไม่เป็นไร ไม่ต้องตามทำย้อนหลัง",[["rest","rest","พัก","",null]]];
 const REST = (extra, url)=>[["chill","rest","ฟังเพลงหรือพอดแคสต์","30 นาที",null], ["sleep","rest",extra||"นอนเร็ว","",extra?(url||PAGE.examday):null]];
 
 /* [week, icon, topic, detail, tasks, lessonUrl] — one per day from 25 Oct.
-   Test 1 = lesson bank (lessons + daily practice) · Test 2 = placement test · Test 3 = final check */
+   Test 1 and Test 2 (done 29 Oct) = lesson bank · Test 3 = final check */
 const PLAN = [
  ["w1","🎧","Part 2 คำตอบอ้อม และ Part 5","บทแรก ใช้ข้อจริง Test 1",STD(PAGE.d1,1),PAGE.d1],
- ["w1","🏁","สอบวัดระดับ Test 2","ยังไม่ต้องสนคะแนน ไว้เทียบตอนท้ายเดือน",FULL("สอบเต็ม Test 2",T2)],
- ["w1","📷","Part 1 ดูรูป","คนกำลังทำ หรือของถูกวางไว้",STD(null,2)],
- ["w1","⏰","Part 5 กริยา","tense และ passive",STD(null,3)],
- ["w1","🎧","Part 2 ประโยคบอกเล่า","รวมคำถามหาง",STD(null,4)],
- ["w1","🔗","Part 5 คำเชื่อม","รวมคำที่มาคู่กัน",STD(null,5)],
- ["w1","📚","Part 5 ศัพท์ และ Mini test","ทดสอบสัปดาห์ 1",MINI("Mini test สัปดาห์ 1")],
- ["w2","💬","Part 3 อ่านคำถามก่อนฟัง","อ่าน 3 คำถามก่อนเสียงเริ่ม",STD(null,0)],
- ["w2","🤔","Part 3 ความหมายแฝง","ทำไมเขาพูดแบบนี้",STD(null,0)],
- ["w2","📊","Part 3 ข้อมีกราฟิก","ดูตารางคู่กับเสียง",STD(null,0)],
- ["w2","📢","Part 4 ประกาศ","ประโยคแรกบอกว่าเรื่องอะไร",STD(null,0)],
- ["w2","✉️","Part 6 เติมคำ","ดูประโยคก่อนและหลังช่อง",STD(null,0)],
- ["w2","🧩","Part 6 เติมประโยค","เลือกประโยคที่ต่อเรื่องได้",STD(null,0)],
- ["w2","📝","Mini test ฟังยาว","ฟังรวด 45 นาที",MINI("ฟัง Test 1 รวด 45 นาที",T1)],
- ["w3","🔍","Part 7 คำถามก่อน","ฝึกกับบทความชุดใหม่",STD(null,0)],
- ["w3","🎯","Part 7 จุดประสงค์","ดูย่อหน้าแรก",STD(null,0)],
- ["w3","❌","Part 7 ข้อ NOT","หาตัวที่ไม่มีในบทความ",STD(null,0)],
- ["w3","🔤","Part 7 ความหมายคำ","เดาจากบริบท",STD(null,0)],
- ["w3","📑","Part 7 สองบทความ","เอาข้อมูล 2 เรื่องมาต่อกัน",STD(null,0)],
- ["w3","📑","Part 7 สามบทความ","คุมเวลาให้ทัน",STD(null,0)],
- ["w3","📝","Mini test อ่าน 75 นาที","Part 5 ถึง 7 ของ Test 1",MINI("อ่าน Test 1 75 นาที",T1)],
- ["w4","🏁","สอบเต็ม Test 3","เทียบกับ Test 2",FULL("สอบเต็ม Test 3",T3)],
- ["w4","🔧","ทวนข้อผิด Test 3","ส่งข้อผิดให้ติวเตอร์อธิบาย",REVIEW],
- ["w4","💪","เก็บจุดอ่อน","บทพิเศษตามผลสอบ",STD(null,0)],
+ WORK, WORK, WORK,
+ ["w1","🏁","สอบเต็ม Test 2 ✓","ทำครบ 200 ข้อแล้ว วันนี้พักได้เลย",FULL("สอบเต็ม Test 2",T2)],
+ ["w1","🧱","ชนิดคำ แบบ TOEIC","เริ่มใหม่จากศูนย์ ดูตำแหน่งในประโยค",BOX(PAGE.L[1]),PAGE.L[1]],
+ ["w1","⏰","Tense 1","ปัจจุบัน อดีต อนาคต และ have + V3",BOX(PAGE.L[2]),PAGE.L[2]],
+ ["w1","⏳","Tense 2","by the time, by next month, had + V3",BOX(PAGE.L[3]),PAGE.L[3]],
+ ["w1","🔄","Passive และ -ed / -ing","ประธานทำเอง หรือถูกทำ",BOX(PAGE.L[4]),PAGE.L[4]],
+ ["w1","🔗","คำเชื่อม 1","เหตุผล ตรงข้าม เงื่อนไข (unless, as long as)",BOX(PAGE.L[5]),PAGE.L[5]],
+ ["w1","🎯","คำเชื่อม 2","in order to, so that, rather than, whereas",BOX(PAGE.L[6]),PAGE.L[6]],
+ ["w1","📝","Mini test Part 5","30 ข้อ 12 นาที แล้วทวนข้อผิด",MINI("Part 5 30 ข้อ จับเวลา 12 นาที")],
+ ["w2","📍","Preposition และคำที่มาคู่กัน","in charge of, responsible for ...",BOX(PAGE.L[7]),PAGE.L[7]],
+ ["w2","🙋","สรรพนาม","his / him / himself / whose",BOX(PAGE.L[8]),PAGE.L[8]],
+ ["w2","🧲","who / which / that","คำที่ใช้แทนคำนามข้างหน้า",BOX(PAGE.L[9]),PAGE.L[9]],
+ ["w2","➡️","V-ing หรือ to V","คำไหนตามด้วยแบบไหน และทำไม",BOX(PAGE.L[10]),PAGE.L[10]],
+ ["w2","⚖️","เปรียบเทียบ และ each / few / little","นับได้ หรือนับไม่ได้",BOX(PAGE.L[11]),PAGE.L[11]],
+ ["w2","✉️","Part 6","เติมคำ และเติมประโยคในบทความ",BOX(PAGE.L[12]),PAGE.L[12]],
+ ["w2","📝","Mini test Part 5 และ 6","46 ข้อ 18 นาที แล้วทวนข้อผิด",MINI("Part 5 และ 6 จับเวลา 18 นาที")],
+ ["w3","🔍","Part 7 คำถามก่อน และข้อ NOT","หาเฉพาะจุดที่ถาม",BOX(PAGE.L[13]),PAGE.L[13]],
+ ["w3","🔤","Part 7 ความหมายคำ และใส่ประโยค","เดาจากบริบท",BOX(PAGE.L[14]),PAGE.L[14]],
+ ["w3","📑","Part 7 บทความคู่และสามบทความ","เอาข้อมูล 2 ที่มาต่อกัน",BOX(PAGE.L[15]),PAGE.L[15]],
+ ["w3","🤔","Part 3 ความหมายแฝง และกราฟิก","ทำไมเขาพูดแบบนี้",BOX(PAGE.L[16]),PAGE.L[16]],
+ ["w3","📢","Part 4 ประกาศ และข้อความเสียง","ประโยคแรกบอกว่าเรื่องอะไร",BOX(PAGE.L[17]),PAGE.L[17]],
+ ["w3","📖","อ่านรวด 75 นาที","Reading ของ Test 1 ทั้งชุด พักได้ครึ่งทาง",MINI("อ่าน Test 1 75 นาที",T1)],
+ ["w3","🔧","ทวนข้อผิด","ส่งข้อผิดให้ติวเตอร์อธิบาย",REVIEW],
+ ["w4","🏁","สอบเต็ม Test 3","เทียบกับ Test 2 พักได้ 5 นาทีหลัง Listening",FULL("สอบเต็ม Test 3",T3)],
+ ["w4","🔧","ทวนข้อผิด Test 3","แคปหน้าผลไว้ก่อนปิดหน้า",REVIEW],
  ["w4","🏁","สอบเต็ม ETS","ข้อสอบตัวอย่างจากผู้ออกข้อสอบจริง",FULL("สอบเต็ม ETS","https://www.ets.org/toeic/test-takers/prepare/")],
- ["w4","🔧","ทวนข้อผิด ETS","จุดอ่อนเดิมดีขึ้นไหม",REVIEW],
- ["w4","🏁","สอบเต็มชุด PDF","ชุดจาก Memmoread มีเฉลยไทย",FULL("สอบเต็มชุด PDF",MM+"/toeic/toeic-test-pdf")],
- ["w4","🔁","ทวนรวม","ข้อผิดทั้งเดือน และศัพท์",REVIEW],
- ["w4","🏁","สอบเต็มชุด PDF ชุดที่ 2","จับเวลาเหมือนจริง",FULL("สอบเต็มชุด PDF ชุดที่ 2",MM+"/toeic/toeic-test-pdf")],
- ["w4","🔧","ทวนข้อผิดชุด PDF","กฎไหนยังลืม จดไว้",REVIEW],
+ ["w4","🔧","ทวนข้อผิด ETS","กฎไหนยังลืม จดไว้",REVIEW],
  ["w4","🖥️","ซ้อมแบบสอบคอม","Part 1–2 ฟังแล้วตอบเลย ไม่ดูคำถามก่อน คืนนี้ลอยกระทง",MINI("ซ้อมฟังแบบสอบคอม ย้อนไม่ได้")],
  ["w4","🔁","ทวนโน้ตรอบสุดท้าย","กฎที่จดไว้ทั้งเดือน และศัพท์",[["review","review","อ่านโน้ตกฎที่จดไว้","40 นาที",null], ["listen","daily","ฟังเสียงจริง Part 2 ซ้ำ","30 นาที",PAGE.daily], tVocab]],
  ["w5","🎒","พัก และจัดกระเป๋า","บัตรประชาชน ใบจอง ตั๋วรถ นอนเร็ว",REST("จัดกระเป๋าตามรายการ",PAGE.trip)],
@@ -431,6 +427,7 @@ function renderNote(){
   const wk = $("#nWeek"); wk.textContent = `วันที่ ${day.i+1}  ${WEEKS[day.week].label}`; wk.style.background = `var(--${day.week})`;
   $("#nTopic").textContent = day.icon + " " + day.topic;
   $("#nDetail").textContent = day.detail;
+  if(day.tasks.some(t=>t[5])) $("#nDetail").insertAdjacentHTML("beforeend", "<br><small>⭐ = ถ้ามีเวลา วันยุ่งทำแค่ข้อ 1 กับ 2 ก็นับว่าผ่าน</small>");
   let n = 0;
   $("#nTasks").innerHTML = day.tasks.map(t=>{
     const [k, type, label, time, url0, bonus] = t, on = p.tasks && p.tasks[k];
