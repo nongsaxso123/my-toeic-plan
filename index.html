@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
+<script>window.FIREBASE_CONFIG={"apiKey":"AIzaSyAWDwkN4chDFRkXXipmj-i-esRhdpgi63g","authDomain":"my-toeic-plan.firebaseapp.com","projectId":"my-toeic-plan","storageBucket":"my-toeic-plan.firebasestorage.app","messagingSenderId":"200821846877","appId":"1:200821846877:web:6074c391266c3827c46eb4"};</script>
 <title>TOEIC Study Plan</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -161,6 +162,9 @@ textarea{width:100%;min-height:70px;background:transparent;border:none;border-bo
 .dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px}
 .dcell{border:1.5px dashed var(--line);border-radius:10px;padding:8px 12px}
 .dcell b{font-family:var(--font-hand);font-weight:400;font-size:1.25rem;color:var(--pen)}
+.sync{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:.9rem;margin:2px 0 4px}
+.sync .chip{font-size:.85rem}
+.sync.on #syncText{color:var(--done);font-weight:700}
 @media (prefers-reduced-motion:reduce){.day,.bar i{transition:none}.day:hover,.day.sel{transform:none}}
 </style>
 </head>
@@ -172,6 +176,7 @@ textarea{width:100%;min-height:70px;background:transparent;border:none;border-bo
     <div class="titlebox">
       <p class="sub">🏠 หน้าหลัก เปิดหน้านี้ทุกวัน</p>
       <h1>แผน <mark>TOEIC</mark> ✏️</h1>
+      <div class="sync" id="syncBox" hidden><span id="syncText">กำลังเชื่อมต่อ...</span><button class="chip" id="syncBtn" hidden>🔐 เข้าสู่ระบบด้วย Google</button></div>
       <p class="sub">เปิดหน้านี้ก่อนทำงานอื่นทุกวัน<br>วันยุ่ง ทำแค่ข้อ 1 และ 2 (45 นาที)<br>สอบ ส. 28 พ.ย. 9:30 ที่เชียงใหม่</p>
     </div>
     <div class="stats">
@@ -353,6 +358,7 @@ function loadLocal(){ try{ return JSON.parse(localStorage.getItem(LOCAL_KEY)) ||
 function saveLocal(){ try{ localStorage.setItem(LOCAL_KEY, JSON.stringify(progress)); }catch(e){} }
 function save(day){
   const body = Object.assign({tasks:{}, hours:0, note:""}, progress[day.id], {date:day.id, topic:day.topic, at:new Date().toISOString()});
+  if(ONSITE) saveLocal();   // website: keep a copy in this browser too (works offline / signed out)
   if(!db){ saveLocal(); $("#nSave").textContent = "✓ บันทึกในเครื่องนี้"; return; }
   $("#nSave").textContent = "กำลังบันทึก...";
   /* while writes for this day are in flight, snapshots carry older data — keep the local copy until the last write lands */
@@ -434,7 +440,7 @@ function renderNote(){
   const ta = $("#nNote"); if(document.activeElement!==ta) ta.value = p.note || "";
   $("#nCheer").textContent = isDone(day) ? CHEERS[day.i % CHEERS.length] : "";
   $("#prevBtn").disabled = sel===0; $("#nextBtn").disabled = sel===days.length-1;
-  $("#nSave").textContent = db ? "" : "กำลังเชื่อมต่อ...";
+  $("#nSave").textContent = db ? "" : (ONSITE ? "บันทึกในเครื่องนี้เท่านั้น" : "กำลังเชื่อมต่อ...");
 }
 function edit(day, fn){
   const cur = progress[day.id] || {tasks:{}, hours:0, note:""};
@@ -496,18 +502,76 @@ sel = todayIdx>=0 ? todayIdx : (saved!==null ? +saved : 0);
 renderLegend(); renderGrid(); renderNote(); renderStats();
 if(ONSITE){ $("#tripLink").remove(); $("#examLink").href = PAGE.examday; $("#examLink").removeAttribute("target"); $("#siteNote").hidden = false; }
 $("#dirLessons").innerHTML = days.filter(d=>d.lesson).map(d=>`<a class="btnlink" href="${d.lesson}" target="_blank" rel="noopener">วันที่ ${d.i+1}: ${d.topic}</a>`).join("");
-(async()=>{
-  try{ db = window.claude ? await window.claude.use("db") : null; }catch(e){ db = null; }
-  if(!db){ progress = loadLocal(); renderGrid(); renderNote(); renderStats(); $("#nSave").textContent = "บันทึกในเครื่องนี้"; return; }
-  $("#nSave").textContent = "";
-  db.collection("progress").onSnapshot(snap=>{
+function renderAll(){ renderGrid(); renderNote(); renderStats(); }
+/* live updates: every tick from any phone / iPad / computer shows up here within a second */
+function listen(){
+  return db.collection("progress").onSnapshot(snap=>{
     const next = {};
     snap.docs.forEach(doc=>{ if(doc.exists) next[doc.id] = doc.data(); });
     // keep local copies of days still being written, and the note being typed right now
     Object.keys(pending).forEach(id=>{ if(pending[id]>0 && progress[id]) next[id] = progress[id]; });
     if(document.activeElement===$("#nNote") && progress[days[sel].id]) next[days[sel].id] = progress[days[sel].id];
-    progress = next; renderGrid(); renderNote(); renderStats();
+    progress = next; if(ONSITE) saveLocal(); renderAll();
   }, err=>{ $("#nSave").textContent = "โหลดไม่ได้ ลองเปิดหน้าใหม่"; });
+}
+
+/* ---------- website only: Firebase (Google sign-in + Firestore) so every device shares the same ticks ----------
+   window.FIREBASE_CONFIG is added by tools/build-site.js. Data lives at users/{uid}/progress/{date};
+   Firestore rules let only that signed-in user read or write it. */
+function loadScript(src){ return new Promise((ok,no)=>{ const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); }); }
+async function startCloud(){
+  const box = $("#syncBox"), txt = $("#syncText"), btn = $("#syncBtn");
+  progress = loadLocal(); renderAll();
+  const cfg = window.FIREBASE_CONFIG;
+  if(!cfg){ $("#nSave").textContent = "บันทึกในเครื่องนี้"; return; }
+  box.hidden = false;
+  try{
+    const B = "https://www.gstatic.com/firebasejs/10.12.2/";
+    await loadScript(B+"firebase-app-compat.js");
+    await Promise.all([loadScript(B+"firebase-auth-compat.js"), loadScript(B+"firebase-firestore-compat.js")]);
+  }catch(e){ txt.textContent = "⚠️ ต่อเน็ตไม่ได้ ตอนนี้บันทึกในเครื่องนี้"; return; }
+  firebase.initializeApp(cfg);
+  const fs = firebase.firestore();
+  try{ await fs.enablePersistence({synchronizeTabs:true}); }catch(e){}   // offline ticks are sent when the internet comes back
+  const auth = firebase.auth();
+  btn.onclick = ()=>{
+    if(auth.currentUser){ auth.signOut(); return; }
+    const gp = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(gp).catch(e=>{ if(e && /popup/.test(e.code||"")) auth.signInWithRedirect(gp); else txt.textContent = "⚠️ เข้าสู่ระบบไม่ได้ ลองใหม่"; });
+  };
+  let unsub = null;
+  auth.onAuthStateChanged(async user=>{
+    if(unsub){ unsub(); unsub = null; }
+    btn.hidden = false;
+    if(!user){
+      db = null; box.classList.remove("on");
+      txt.textContent = "⚠️ ยังไม่ซิงก์ ติ๊กแล้วอยู่แค่เครื่องนี้";
+      btn.textContent = "🔐 เข้าสู่ระบบด้วย Google";
+      progress = loadLocal(); renderAll(); return;
+    }
+    const root = fs.collection("users").doc(user.uid);
+    db = {collection:n=>root.collection(n)};
+    box.classList.add("on");
+    txt.textContent = "✓ ซิงก์ทุกเครื่องแล้ว";
+    btn.textContent = "ออกจากระบบ";
+    // first time on this browser: upload days the cloud does not have yet (nothing is overwritten)
+    try{
+      const snap = await root.collection("progress").get();
+      const have = new Set(snap.docs.map(d=>d.id));
+      const local = loadLocal();
+      await Promise.all(Object.keys(local).filter(id=>!have.has(id)).map(id=>
+        root.collection("progress").doc(id).set(Object.assign({tasks:{}, hours:0, note:""}, local[id], {date:id}))));
+    }catch(e){}
+    unsub = listen();
+  });
+}
+
+(async()=>{
+  if(ONSITE){ startCloud(); return; }
+  try{ db = window.claude ? await window.claude.use("db") : null; }catch(e){ db = null; }
+  if(!db){ progress = loadLocal(); renderAll(); $("#nSave").textContent = "บันทึกในเครื่องนี้"; return; }
+  $("#nSave").textContent = "";
+  listen();
 })();
 </script>
 
