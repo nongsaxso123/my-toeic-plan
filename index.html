@@ -172,7 +172,7 @@ textarea{width:100%;min-height:70px;background:transparent;border:none;border-bo
     <div class="titlebox">
       <p class="sub">🏠 หน้าหลัก เปิดหน้านี้ทุกวัน</p>
       <h1>แผน <mark>TOEIC</mark> ✏️</h1>
-      <p class="sub">25 ต.ค. ถึง 26 พ.ย. วันละ 2–4 ชม.<br>สอบ ส. 28 พ.ย. 9:30 ที่เชียงใหม่</p>
+      <p class="sub">เปิดหน้านี้ก่อนทำงานอื่นทุกวัน<br>วันยุ่ง ทำแค่ข้อ 1 และ 2 (45 นาที)<br>สอบ ส. 28 พ.ย. 9:30 ที่เชียงใหม่</p>
     </div>
     <div class="stats">
       <div class="stat hand"><b id="stDone">0/28</b><span>วันที่ทำครบ</span></div>
@@ -231,8 +231,7 @@ textarea{width:100%;min-height:70px;background:transparent;border:none;border-bo
         <p class="sub">เปิดเฉพาะวันที่ปฏิทินบอก</p>
         <ul>
           <li>Test 2 ✓ เสร็จ</li>
-          <li>Test 3 วันที่ 20 พ.ย.</li>
-          <li>Test 1 อ่านรวด 19 พ.ย.</li>
+          <li>Test 3 วันเสาร์ 21 พ.ย.</li>
         </ul>
       </div>
       <div class="dirbox">
@@ -249,11 +248,11 @@ textarea{width:100%;min-height:70px;background:transparent;border:none;border-bo
 const START = new Date(2026, 9, 25);
 const EXAM = new Date(2026, 10, 28);
 const WEEKS = {
-  w1:{label:"สัปดาห์ 1: เริ่มใหม่ Grammar หลัก"},
-  w2:{label:"สัปดาห์ 2: Grammar ต่อ และ Part 6"},
-  w3:{label:"สัปดาห์ 3: Reading และ Part 3–4"},
-  w4:{label:"สัปดาห์ 4: สอบเต็ม"},
-  w5:{label:"พัก และเดินทาง"},
+  w1:{label:"ช่วงแรก: เริ่มใหม่ Grammar หลัก"},
+  w2:{label:"12–18 พ.ย.: Grammar ที่ออกบ่อย และ Part 6"},
+  w3:{label:"19–23 พ.ย.: Reading และสอบเต็ม"},
+  w4:{label:"24–26 พ.ย.: ซ้อมแบบสอบคอม และทวน"},
+  w5:{label:"พัก ติดงาน และเดินทาง"},
   w6:{label:"วันสอบ"}
 };
 /* Pages (artifacts). Every task row in a day links straight to the page it needs.
@@ -303,28 +302,20 @@ const PLAN = [
  ["w1","🧱","ชนิดคำ แบบ TOEIC","เริ่มใหม่จากศูนย์ ดูตำแหน่งในประโยค",BOX(PAGE.L[1]),PAGE.L[1]],
  ["w1","⏰","Tense 1","ปัจจุบัน อดีต อนาคต และ have + V3",BOX(PAGE.L[2]),PAGE.L[2]],
  ["w1","⏳","Tense 2","by the time, by next month, had + V3",BOX(PAGE.L[3]),PAGE.L[3]],
- ["w1","🔄","Passive และ -ed / -ing","ประธานทำเอง หรือถูกทำ",BOX(PAGE.L[4]),PAGE.L[4]],
- ["w1","🔗","คำเชื่อม 1","เหตุผล ตรงข้าม เงื่อนไข (unless, as long as)",BOX(PAGE.L[5]),PAGE.L[5]],
- ["w1","🎯","คำเชื่อม 2","in order to, so that, rather than, whereas",BOX(PAGE.L[6]),PAGE.L[6]],
- ["w1","📝","Mini test Part 5","30 ข้อ 12 นาที แล้วทวนข้อผิด",MINI("Part 5 30 ข้อ จับเวลา 12 นาที")],
- ["w2","📍","Preposition และคำที่มาคู่กัน","in charge of, responsible for ...",BOX(PAGE.L[7]),PAGE.L[7]],
- ["w2","🙋","สรรพนาม","his / him / himself / whose",BOX(PAGE.L[8]),PAGE.L[8]],
- ["w2","🧲","who / which / that","คำที่ใช้แทนคำนามข้างหน้า",BOX(PAGE.L[9]),PAGE.L[9]],
- ["w2","➡️","V-ing หรือ to V","คำไหนตามด้วยแบบไหน และทำไม",BOX(PAGE.L[10]),PAGE.L[10]],
- ["w2","⚖️","เปรียบเทียบ และ each / few / little","นับได้ หรือนับไม่ได้",BOX(PAGE.L[11]),PAGE.L[11]],
- ["w2","✉️","Part 6","เติมคำ และเติมประโยคในบทความ",BOX(PAGE.L[12]),PAGE.L[12]],
- ["w2","📝","Mini test Part 5 และ 6","46 ข้อ 18 นาที แล้วทวนข้อผิด",MINI("Part 5 และ 6 จับเวลา 18 นาที")],
- ["w3","🔍","Part 7 คำถามก่อน และข้อ NOT","หาเฉพาะจุดที่ถาม",BOX(PAGE.L[13]),PAGE.L[13]],
- ["w3","🔤","Part 7 ความหมายคำ และใส่ประโยค","เดาจากบริบท",BOX(PAGE.L[14]),PAGE.L[14]],
- ["w3","📑","Part 7 บทความคู่และสามบทความ","เอาข้อมูล 2 ที่มาต่อกัน",BOX(PAGE.L[15]),PAGE.L[15]],
- ["w3","🤔","Part 3 ความหมายแฝง และกราฟิก","ทำไมเขาพูดแบบนี้",BOX(PAGE.L[16]),PAGE.L[16]],
- ["w3","📢","Part 4 ประกาศ และข้อความเสียง","ประโยคแรกบอกว่าเรื่องอะไร",BOX(PAGE.L[17]),PAGE.L[17]],
- ["w3","📖","อ่านรวด 75 นาที","Reading ของ Test 1 ทั้งชุด พักได้ครึ่งทาง",MINI("อ่าน Test 1 75 นาที",T1)],
- ["w3","🔧","ทวนข้อผิด","ส่งข้อผิดให้ติวเตอร์อธิบาย",REVIEW],
- ["w4","🏁","สอบเต็ม Test 3","เทียบกับ Test 2 พักได้ 5 นาทีหลัง Listening",FULL("สอบเต็ม Test 3",T3)],
- ["w4","🔧","ทวนข้อผิด Test 3","แคปหน้าผลไว้ก่อนปิดหน้า",REVIEW],
- ["w4","🏁","สอบเต็ม ETS","ข้อสอบตัวอย่างจากผู้ออกข้อสอบจริง",FULL("สอบเต็ม ETS","https://www.ets.org/toeic/test-takers/prepare/")],
- ["w4","🔧","ทวนข้อผิด ETS","กฎไหนยังลืม จดไว้",REVIEW],
+ /* 2–11 Nov: busy with other work. New plan from 12 Nov (study this FIRST each day, before other work). */
+ WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+ ["w2","⏳","Tense 2 (กลับมาเริ่ม)","by the time, by next month, had + V3",BOX(PAGE.L[3]),PAGE.L[3]],
+ ["w2","🔄","Passive และ -ed / -ing","ประธานทำเอง หรือถูกทำ",BOX(PAGE.L[4]),PAGE.L[4]],
+ ["w2","🔗","คำเชื่อม","because / although / unless / in order to",BOX(PAGE.L[5]),PAGE.L[5]],
+ ["w2","📝","Mini test Part 5","30 ข้อ 12 นาที แล้วทวนข้อผิด",MINI("Part 5 30 ข้อ จับเวลา 12 นาที")],
+ ["w2","📍","Preposition และคำที่มาคู่กัน","in charge of, responsible for ...",BOX(PAGE.L[6]),PAGE.L[6]],
+ ["w2","🙋","สรรพนาม และ who / which / whose","his / him / himself และคำแทนคำนาม",BOX(PAGE.L[7]),PAGE.L[7]],
+ ["w2","✉️","Part 6","เติมคำ และเติมประโยคในบทความ",BOX(PAGE.L[8]),PAGE.L[8]],
+ ["w3","🔍","Part 7 คำถามก่อน และข้อ NOT","หาเฉพาะจุดที่ถาม และเดาความหมายคำ",BOX(PAGE.L[9]),PAGE.L[9]],
+ ["w3","📑","Part 7 บทความคู่และสามบทความ","เอาข้อมูล 2 ที่มาต่อกัน",BOX(PAGE.L[10]),PAGE.L[10]],
+ ["w3","🏁","สอบเต็ม Test 3","วันเสาร์ ทำครั้งเดียว 2 ชั่วโมง",FULL("สอบเต็ม Test 3",T3)],
+ ["w3","🔧","ทวนข้อผิด Test 3","ส่งข้อผิดให้ติวเตอร์อธิบาย",REVIEW],
+ ["w3","🤔","Part 3 และ 4","อ่านคำถามก่อนเสียงมา และข้อกราฟิก",BOX(PAGE.L[11]),PAGE.L[11]],
  ["w4","🖥️","ซ้อมแบบสอบคอม","Part 1–2 ฟังแล้วตอบเลย ไม่ดูคำถามก่อน คืนนี้ลอยกระทง",MINI("ซ้อมฟังแบบสอบคอม ย้อนไม่ได้")],
  ["w4","🔁","ทวนโน้ตรอบสุดท้าย","กฎที่จดไว้ทั้งเดือน และศัพท์",[["review","review","อ่านโน้ตกฎที่จดไว้","40 นาที",null], ["listen","daily","ฟังเสียงจริง Part 2 ซ้ำ","30 นาที",PAGE.daily], tVocab]],
  ["w5","🎒","พัก และจัดกระเป๋า","บัตรประชาชน ใบจอง ตั๋วรถ นอนเร็ว",REST("จัดกระเป๋าตามรายการ",PAGE.trip)],
