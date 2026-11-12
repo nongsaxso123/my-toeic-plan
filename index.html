@@ -229,7 +229,7 @@ textarea{width:100%;min-height:70px;background:transparent;border:none;border-bo
       <div class="dirbox">
         <h3><span class="ty daily">🎙️ ฝึกประจำวัน</span></h3>
         <p class="sub">หน้าเดียว ใช้ทุกวัน เปลี่ยนแค่ชุด</p>
-        <div class="btns"><a class="btnlink" href="https://claude.ai/artifact/Jbhi6ZQVo1AWRxw9NZwu7R" target="_blank" rel="noopener">ฝึกประจำวัน</a></div>
+        <div class="btns"><a class="btnlink" href="https://claude.ai/artifact/Jbhi6ZQVo1AWRxw9NZwu7R" target="_blank" rel="noopener">ฝึกประจำวัน</a><a class="btnlink" href="https://claude.ai/artifact/1L1dDCWeNn1i4xjVRU1kdm" target="_blank" rel="noopener">🎮 ศัพท์วันละ 15 คำ</a></div>
       </div>
       <div class="dirbox">
         <h3><span class="ty test">📝 สอบเต็ม</span></h3>
@@ -283,7 +283,8 @@ const VOCAB = "VOCAB";   // replaced by the day's Memmoread vocab set
 const tLesson = url=>["lesson","learn","บทเรียนและ Mock","40 นาที",url];
 const tListen = set=>["listen","daily",`ฟังเขียนตาม และพูดตาม${set?` (ชุด ${set})`:""}`,"30 นาที",set?PAGE.daily+"#set="+set:null];
 const tRead = set=>["read","daily",`อ่าน Part 7 จับเวลา${set?` (ชุด ${set})`:""}`,"30 นาที",set?PAGE.daily+"#set="+set:null];
-const tVocab = ["vocab","vocab","เกมศัพท์","20 นาที",VOCAB];
+/* from 12 Nov: our own vocab page (15 words a day in real test sentences, review of missed words) */
+const tVocab = ["vocab","vocab","ศัพท์ 15 คำ และทวนคำที่ผิด","15 นาที","https://claude.ai/artifact/1L1dDCWeNn1i4xjVRU1kdm"];
 /* bonus: Memmoread has only 3 online tests (all already assigned), so the extra is a redo of the day's Mock under real-test rules */
 const tHalf = url=>["half","learn","ทำ Mock ซ้ำแบบสอบจริง","ฟัง 1 รอบ ส่งทีเดียว",url,true];
 const STD = (lesson, set)=>[tLesson(lesson), tListen(set), tRead(set), tVocab, tHalf(lesson)];
