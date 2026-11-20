@@ -236,7 +236,7 @@ textarea{width:100%;min-height:70px;background:transparent;border:none;border-bo
         <p class="sub">เปิดเฉพาะวันที่ปฏิทินบอก</p>
         <ul>
           <li>Test 2 ✓ เสร็จ</li>
-          <li>Test 3 วันเสาร์ 21 พ.ย.</li>
+          <li>Test 3 วันจันทร์ 23 พ.ย.</li>
         </ul>
       </div>
       <div class="dirbox">
@@ -254,9 +254,9 @@ const START = new Date(2026, 9, 25);
 const EXAM = new Date(2026, 10, 28);
 const WEEKS = {
   w1:{label:"ช่วงแรก: เริ่มใหม่ Grammar หลัก"},
-  w2:{label:"12–18 พ.ย.: Grammar ที่ออกบ่อย และ Part 6"},
-  w3:{label:"19–23 พ.ย.: Reading และสอบเต็ม"},
-  w4:{label:"24–26 พ.ย.: ซ้อมแบบสอบคอม และทวน"},
+  w2:{label:"12 พ.ย.: Tense"},
+  w3:{label:"20–22 พ.ย.: Grammar ที่ออกบ่อย และ Part 6 (วันละ 2 เรื่อง)"},
+  w4:{label:"23–25 พ.ย.: สอบเต็ม, Reading, Part 3–4 และซ้อมแบบสอบคอม"},
   w5:{label:"พัก ติดงาน และเดินทาง"},
   w6:{label:"วันสอบ"}
 };
@@ -297,6 +297,10 @@ const BOX = url=>[["lesson","learn","Grammar ใหม่ 1 เรื่อง �
   ["listen","learn","ฟังข้อจริง รอบเดียว","25 นาที",url&&url+"#listen",true],
   ["read","learn","อ่าน Part 7 แค่ 2–3 บทความ","25 นาที",url&&url+"#read",true]];
 const WORK = ["w5","💼","ติดงาน","ไม่เป็นไร ไม่ต้องตามทำย้อนหลัง",[["rest","rest","พัก","",null]]];
+/* from 20 Nov: 4–5 hours a day for TOEIC, so 2 lessons a day and listen / read are not optional any more */
+const BOX2 = (a, b, nameA, nameB)=>[["lesson","learn",`① ${nameA}`,"40 นาที",a], ["lesson2","learn",`② ${nameB}`,"40 นาที",b],
+  ["listen","learn","ฟังข้อจริง รอบเดียว","30 นาที",a&&a+"#listen"],
+  ["read","learn","อ่าน Part 7","30 นาที",b&&b+"#read"], tVocab];
 const REST = (extra, url)=>[["chill","rest","ฟังเพลงหรือพอดแคสต์","30 นาที",null], ["sleep","rest",extra||"นอนเร็ว","",extra?(url||PAGE.examday):null]];
 
 /* [week, icon, topic, detail, tasks, lessonUrl] — one per day from 25 Oct.
@@ -311,20 +315,15 @@ const PLAN = [
  /* 2–11 Nov: busy with other work. New plan from 12 Nov (study this FIRST each day, before other work). */
  WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
  ["w2","⏳","Tense 2 (กลับมาเริ่ม)","by the time, by next month, had + V3",BOX(PAGE.L[3]),PAGE.L[3]],
- ["w2","🔄","Passive และ -ed / -ing","ประธานทำเอง หรือถูกทำ",BOX(PAGE.L[4]),PAGE.L[4]],
- ["w2","🔗","คำเชื่อม","because / although / unless / in order to",BOX(PAGE.L[5]),PAGE.L[5]],
- ["w2","📝","Mini test Part 5","30 ข้อ 12 นาที แล้วทวนข้อผิด",MINI("Part 5 30 ข้อ จับเวลา 12 นาที")],
- ["w2","📍","Preposition และคำที่มาคู่กัน","in charge of, responsible for ...",BOX(PAGE.L[6]),PAGE.L[6]],
- ["w2","🙋","สรรพนาม และ who / which / whose","his / him / himself และคำแทนคำนาม",BOX(PAGE.L[7]),PAGE.L[7]],
- ["w2","✉️","Part 6","เติมคำ และเติมประโยคในบทความ",BOX(PAGE.L[8]),PAGE.L[8]],
- ["w3","🔍","Part 7 คำถามก่อน และข้อ NOT","หาเฉพาะจุดที่ถาม และเดาความหมายคำ",BOX(PAGE.L[9]),PAGE.L[9]],
- ["w3","📑","Part 7 บทความคู่และสามบทความ","เอาข้อมูล 2 ที่มาต่อกัน",BOX(PAGE.L[10]),PAGE.L[10]],
- ["w3","🏁","สอบเต็ม Test 3","วันเสาร์ ทำครั้งเดียว 2 ชั่วโมง",FULL("สอบเต็ม Test 3",T3)],
- ["w3","🔧","ทวนข้อผิด Test 3","ส่งข้อผิดให้ติวเตอร์อธิบาย",REVIEW],
- ["w3","🤔","Part 3 และ 4","อ่านคำถามก่อนเสียงมา และข้อกราฟิก",BOX(PAGE.L[11]),PAGE.L[11]],
- ["w4","🖥️","ซ้อมแบบสอบคอม","Part 1–2 ฟังแล้วตอบเลย ไม่ดูคำถามก่อน คืนนี้ลอยกระทง",MINI("ซ้อมฟังแบบสอบคอม ย้อนไม่ได้")],
- ["w4","🔁","ทวนโน้ตรอบสุดท้าย","กฎที่จดไว้ทั้งเดือน และศัพท์",[["review","review","อ่านโน้ตกฎที่จดไว้","40 นาที",null], ["listen","daily","ฟังเสียงจริง Part 2 ซ้ำ","30 นาที",PAGE.daily], tVocab]],
- ["w5","🎒","พัก และจัดกระเป๋า","บัตรประชาชน ใบจอง ตั๋วรถ นอนเร็ว",REST("จัดกระเป๋าตามรายการ",PAGE.trip)],
+ /* 13–19 Nov: away. New plan from 20 Nov (4–5 hours a day). */
+ WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+ ["w3","🔄","Passive และ -ed / -ing","ประธานทำเอง หรือถูกทำ",BOX(PAGE.L[4]),PAGE.L[4]],
+ ["w3","🔗","คำเชื่อม และ Preposition","although / despite / unless และ in charge of ...",BOX2(PAGE.L[5],PAGE.L[6],"คำเชื่อม","Preposition และคำที่มาคู่กัน"),PAGE.L[5]],
+ ["w3","🙋","สรรพนาม, who / which และ Part 6","his / him / himself และเติมคำในบทความ",BOX2(PAGE.L[7],PAGE.L[8],"สรรพนาม และ who / which","Part 6"),PAGE.L[7]],
+ ["w4","🏁","สอบเต็ม Test 3","ฟังรอบเดียวเหมือนสอบจริง แล้วทวนข้อผิด",[["test","test","สอบเต็ม Test 3","2 ชั่วโมง",T3], ["score","test","จดคะแนนลงช่องบันทึก","5 นาที",null], ["review","review","ดูข้อผิดทีละข้อ","60 นาที",null], tVocab]],
+ ["w4","📑","Part 7 บทความคู่ และ Part 3–4","เอาข้อมูล 2 ที่มาต่อกัน และอ่านคำถามก่อนเสียงมา",BOX2(PAGE.L[9],PAGE.L[10],"Part 7 บทความคู่ และข้อ NOT","Part 3 และ 4"),PAGE.L[9]],
+ ["w4","🖥️","ซ้อมแบบสอบคอม และทวนโน้ต","Part 1–2 ฟังแล้วตอบเลย ไม่ดูคำถามก่อน",[["test","test","Part 5 30 ข้อ จับเวลา 12 นาที","15 นาที",null], ["sim","test","ซ้อมฟังแบบสอบคอม ย้อนไม่ได้","40 นาที",null], ["review","review","อ่านโน้ตกฎที่จดไว้","40 นาที",null], tVocab]],
+ ["w5","🎒","สอบไฟนอลอีกวิชา และจัดกระเป๋า","ศัพท์แค่ 15 นาที บัตรประชาชน ใบจอง ตั๋วรถ นอนเร็ว",[tVocab, ["pack","rest","จัดกระเป๋าตามรายการ","",PAGE.trip||PAGE.examday], ["sleep","rest","นอนเร็ว","",null]]],
  ["w5","🚌","เดินทางไปเชียงใหม่","เวลารถรอจองตั๋ว",[["go","trip","ขึ้นรถไปเชียงใหม่","เวลารอจองตั๋ว",PAGE.trip], ["site","trip","ไปดูทางไปสนามสอบ","ถ้าถึงก่อนมืด",PAGE.trip], ["sleep","rest","นอนก่อน 4 ทุ่ม","",null]]],
  ["w6","✍️","วันสอบ TOEIC 9:30","ถึงสนามสอบ 8:30 เอาบัตรประชาชนไป",[["exam","trip","ไปสอบ ถึงก่อน 8:30","บัตรประชาชน",PAGE.trip], ["score","test","จดคะแนนลงช่องบันทึก","รอบคอมเห็นคะแนนทันที",null]]],
  ["w5","🏠","กลับบ้าน","เวลารถรอจองตั๋ว",[["back","trip","ขึ้นรถกลับ","เวลารอจองตั๋ว",PAGE.trip]]]
