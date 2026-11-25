@@ -236,7 +236,7 @@ textarea{width:100%;min-height:70px;background:transparent;border:none;border-bo
         <p class="sub">เปิดเฉพาะวันที่ปฏิทินบอก</p>
         <ul>
           <li>Test 2 ✓ เสร็จ</li>
-          <li>Test 3 วันพุธ 25 พ.ย.</li>
+          <li>Test 3 วันพฤหัส 26 พ.ย.</li>
         </ul>
         <div class="btns"><a class="btnlink" href="https://claude.ai/artifact/LAnr1gPQEypmJ8Y89JezJ4" target="_blank" rel="noopener">🎧 Test 3 ฟัง (มีบทพูดและเฉลย)</a><a class="btnlink ghost" href="https://memmoread.com/toeic/online-test/simulator/toeic-actual-test-simulation-test-3" target="_blank" rel="noopener">📖 Test 3 อ่าน (Memmoread)</a></div>
       </div>
@@ -325,8 +325,8 @@ const PLAN = [
  ["w3","🙋","สรรพนาม, who / which, preposition และ Part 6","ฝึกเรื่องละ 6 ข้อ แล้วทำข้อจริง 10 ข้อ",BOX2(PAGE.L[6],null,"บทที่ 6 คำเล็ก ๆ","").filter(t=>t[0]!=="lesson2"&&t[0]!=="read"),PAGE.L[6]],
  ["w4","🏁","สอบเต็ม Test 3","ฟังรอบเดียวเหมือนสอบจริง แล้วทวนข้อผิด",[["test","test","สอบเต็ม Test 3","2 ชั่วโมง",T3], ["score","test","จดคะแนนลงช่องบันทึก","5 นาที",null], ["review","review","ดูข้อผิดทีละข้อ","60 นาที",null], tVocab]],
  ["w4","🧹","เก็บงานวันที่ 22–23","บทที่ 6 และฟัง Part 3 (Test 3 ย้ายไปพรุ่งนี้)",[["lesson","learn","บทที่ 6 คำเล็ก ๆ และฟัง Part 3","90 นาที",PAGE.L[6]]]],
- ["w4","🏁","สอบเต็ม Test 3 (ย้ายมาจากวันที่ 23)","ฟังในหน้าของเรา (มีบทพูดและเฉลย) แล้วอ่านใน Memmoread",[["rev","review","ทวนบทที่ 6 และข้อคละบท 1–6","15 นาที","https://claude.ai/artifact/L9gXXpXGLf5BycCDVSdZhG"], ["test","test","Test 3 ฟัง Part 1–4 (หน้าของเรา ฟังรอบเดียว)","50 นาที",T3L], ["test2","test","Test 3 อ่าน Part 5–7 (Memmoread)","75 นาที",T3], ["score","test","ส่งคะแนนให้ติวเตอร์","5 นาที",null], ["review","review","ดูข้อผิดทีละข้อ","60 นาที",null], tVocab]],
- ["w4","🩹","อุดรูรั่ว ซ้อมแบบสอบคอม และจัดกระเป๋า","สอบ SE แค่ไม่กี่ชั่วโมง ที่เหลืออ่าน TOEIC ตามปกติ",[["lesson","learn","บทที่ 7 อุดรูรั่ว: 8 เรื่องที่ยังไม่ได้เรียน","80 นาที",PAGE.L[7]||null], ["sim","test","ซ้อมฟังแบบสอบคอม ย้อนไม่ได้","40 นาที",null], ["review","review","อ่านโน้ตกฎที่จดไว้","30 นาที",null], tVocab, ["pack","rest","จัดกระเป๋าตามรายการ","",PAGE.trip||PAGE.examday], ["sleep","rest","นอนเร็ว","",null]]],
+ ["w4","🩹","ทวนบทที่ 6 และอุดรูรั่ว","8 เรื่องที่ยังไม่ได้เรียน เรื่องละ 6 ข้อ แล้วทำข้อจริง 10 ข้อ",[["rev","review","ทวนบทที่ 6 และข้อคละบท 1–6","15 นาที","https://claude.ai/artifact/L9gXXpXGLf5BycCDVSdZhG"], ["lesson","learn","บทที่ 7 อุดรูรั่ว: 8 เรื่องที่ยังไม่ได้เรียน","3 ชั่วโมง",PAGE.L[7]], tVocab],PAGE.L[7]],
+ ["w4","🏁","สอบ SE และสอบเต็ม Test 3","สอบ SE แค่ไม่กี่ชั่วโมง ที่เหลือทำ Test 3 (ฟังรอบเดียว = ซ้อมแบบสอบคอมไปด้วย)",[["test","test","Test 3 ฟัง Part 1–4 (หน้าของเรา ฟังรอบเดียว)","50 นาที",T3L], ["test2","test","Test 3 อ่าน Part 5–7 (Memmoread)","75 นาที",T3], ["score","test","ส่งคะแนนให้ติวเตอร์","5 นาที",null], ["review","review","ดูข้อผิดทีละข้อ","60 นาที",null], tVocab, ["pack","rest","จัดกระเป๋าตามรายการ","",PAGE.trip||PAGE.examday], ["sleep","rest","นอนเร็ว","",null]]],
  ["w4","🚌","ทวนเบา ๆ และเดินทางไปเชียงใหม่","อ่านแค่ 2 ชม. ไม่เรียนเรื่องใหม่ เดินทาง 3 ชม. แล้วพัก",[["review","review","อ่านสมุดจดกฎ 📌 และข้อที่เคยผิด","60 นาที",null], ["test","test","Part 5 20 ข้อ จับเวลา (ข้อที่เคยทำแล้ว)","20 นาที",null], tVocab, ["go","trip","ขึ้นรถไปเชียงใหม่","3 ชม. (เวลารอจองตั๋ว)",PAGE.trip], ["site","trip","เดินไปดูทางไปสนามสอบ","~400 ม. ถ้าถึงก่อนมืด",PAGE.trip], ["sleep","rest","พัก และนอนก่อน 4 ทุ่ม","",null]]],
  ["w6","✍️","วันสอบ TOEIC 9:30","ถึงสนามสอบ 8:30 เอาบัตรประชาชนไป",[["exam","trip","ไปสอบ ถึงก่อน 8:30","บัตรประชาชน",PAGE.trip], ["score","test","จดคะแนนลงช่องบันทึก","รอบคอมเห็นคะแนนทันที",null]]],
  ["w5","🏠","กลับบ้าน","เวลารถรอจองตั๋ว",[["back","trip","ขึ้นรถกลับ","เวลารอจองตั๋ว",PAGE.trip]]]
